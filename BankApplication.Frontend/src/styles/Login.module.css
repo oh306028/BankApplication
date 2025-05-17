@@ -1,0 +1,85 @@
+.loginContainer {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px 25px;
+  background-color: #f2f8ff;
+  border: 1px solid #cce0ff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 77, 153, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #003366;
+  margin-top: 200px;
+}
+
+.loginTitle {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #004d99;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #004d99;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #003366;
+  background-color: white;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #00264d;
+  box-shadow: 0 0 5px rgba(0, 77, 153, 0.5);
+}
+
+.submitButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #004d99;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #003366;
+}
+
+.decorativeLine {
+  height: 3px;
+  width: 60px;
+  background-color: #004d99;
+  margin: 15px auto 30px;
+  border-radius: 2px;
+}
+
+.error{
+  color: red;
+  padding: 0;
+  margin: 0;
+}
+
+.errorFound{
+  color: red;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
