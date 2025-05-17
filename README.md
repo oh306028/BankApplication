@@ -12,7 +12,7 @@ Running the application on your local machine:
 3) As a contributor please do not write code at the main branch, createh feature branch push and then create pull reques to the main one.
 
 
-Default login to admin account:
+Default login to admin account:  
 **login**: adminTab  
 **password**: Admin!  
 **email**: admin@admin.pl  
