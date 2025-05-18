@@ -88,6 +88,14 @@ function WelcomePage() {
             className={styles.sectionImageSmall}
           />
         </section>
+        <section className={styles.section} style={{ marginBottom: "150px" }}>
+          <h3>Poznaj nasze oferty</h3>
+          <p>
+            Tylko w naszym serwisie bankowym otworzysz konto oszczędniościowe,
+            rachunek bierzący czy konto kredytowe. Nasze usługi ciągle się
+            rozwijają i nie ma przestrzeni na brak nowości.
+          </p>
+        </section>
       </main>
 
       <Footer />
