@@ -1,5 +1,4 @@
 ﻿using BankApplication.App.Exceptions;
-using BankApplication.App.Modules.Account.Models;
 using BankApplication.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication;
@@ -8,6 +7,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using BankApplication.App.Modules.Account.Models.Create;
+using BankApplication.App.Modules.Client.Models.Details;
+using BankApplication.App.Modules.Client.Models.Create;
+using AutoMapper;
+using BankApplication.Data.Entities;
 
 namespace BankApplication.App.Services.Account
 {
@@ -19,12 +23,14 @@ namespace BankApplication.App.Services.Account
     public class AccountService : IAccountService
     {
         private readonly AppDbContext context;
-        private readonly JwtOptions authenticationOptions;  
+        private readonly JwtOptions authenticationOptions;
+        private readonly IMapper mapper;
 
-        public AccountService(AppDbContext context, JwtOptions authenticationOptions)   
+        public AccountService(AppDbContext context, JwtOptions authenticationOptions, IMapper mapper)   
         {
             this.context = context;
             this.authenticationOptions = authenticationOptions;
+            this.mapper = mapper;
         }
 
         public string Login(LoginModel model)
@@ -73,6 +79,6 @@ namespace BankApplication.App.Services.Account
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
+      
     }
 }

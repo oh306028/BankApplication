@@ -41,6 +41,8 @@ namespace BankApplication.App
                     .AsImplementedInterfaces()
                     .WithScopedLifetime());
 
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 
             var jwtOptionSection = builder.Configuration.GetRequiredSection("Jwt");
             builder.Services.Configure<JwtOptions>(jwtOptionSection);

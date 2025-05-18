@@ -1,6 +1,8 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using BankApplication.App.Modules.Client.Models.Details;
+using FluentValidation;
 
-namespace BankApplication.App.Modules.Client.Models
+namespace BankApplication.App.Modules.Client.Models.Create
 {
     public class ClientForm
     {
@@ -34,6 +36,14 @@ namespace BankApplication.App.Modules.Client.Models
             RuleFor(f => f.City).NotEmpty().MaximumLength(50).WithMessage("Miasto jest wymagane");
             RuleFor(f => f.PostalCode).NotEmpty().MaximumLength(20).WithMessage("Kod pocztowy jest wymagany");
             RuleFor(f => f.Number).NotEmpty().MaximumLength(20).WithMessage("Numer mieszkania jest wymagany");
+        }
+    }
+
+    public class ClientFormProfile : Profile    
+    {   
+        public ClientFormProfile()
+        {
+            CreateMap<ClientForm , BankApplication.Data.Entities.Client>();
         }
     }
 }

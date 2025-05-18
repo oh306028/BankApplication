@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace BankApplication.App.Modules.Account.Models
+namespace BankApplication.App.Modules.Account.Models.Create
 {
     public class LoginModel
     {
