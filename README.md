@@ -4,10 +4,10 @@ The Bank Application is the final project for the **"Creating Database Applicati
 As the main contributor, I am responsible for leading the team, managing pull requests, merging code, assigning tasks, and providing guidance. 
 
 **The application requires:**  
-1).Net Core SDK (minimum 6.0)
-2) Node.js (minimum v 20)
-3) SQL Server management studio (to manage your database) //application uses localdb by EF core .sqlserver package
-4) Visual studio (backend) and Visual Studio Code (frontend)
+1).Net Core SDK (minimum 6.0)  
+2) Node.js (minimum v 20)  
+3) SQL Server management studio (to manage your database) //application uses localdb by EF core .sqlserver package  
+4) Visual studio (backend) and Visual Studio Code (frontend)  
 
 
 **Running the application on your local machine:**  
