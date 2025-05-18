@@ -24,4 +24,9 @@ Default login to admin account:
 **email**: admin@admin.pl  
 
 
-**📄 Technical Documentation**
+**📄 Technical Documentation**  
+The app is module oriented project, each module has its own controllers and models.  
+
+On the backend side there are:  
+1) BankApplication.Data (entities and enums connected to database models)  
+2) BankApplication.App (web api solution; contains controllers and services)  
