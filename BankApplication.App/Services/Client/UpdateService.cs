@@ -32,7 +32,13 @@ namespace BankApplication.App.Services.Client
         }
         public BankApplication.Data.Entities.Client Join(ClientForm model)
         {
+            var newMail = context.Clients.FirstOrDefault(e => e.Email.ToLower() == model.Email.ToLower());
+            if (newMail != null)
+                throw new NotFoundException("Ten adres email jest już wykorzystany");
+
             var newClient = mapper.Map<BankApplication.Data.Entities.Client>(model);
+            newClient.IsActive = false; //admin has to accept new client
+
             context.Clients.Add(newClient);
             context.SaveChanges();
 

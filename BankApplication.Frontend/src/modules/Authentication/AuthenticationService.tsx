@@ -6,7 +6,7 @@ export default class AuthenticationService {
   }
 
   public static async join(model: ClientForm): Promise<string> {
-    return (await axios.post<string>("accounts/login", model)).data;
+    return (await axios.post<string>("clients", model)).data;
   }
 }
 
@@ -16,4 +16,17 @@ export interface LoginModel {
   email: string;
 }
 
-export interface ClientForm {}
+export interface ClientForm {
+  publicId?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  pesel: string;
+  birthDate: Date | null;
+  nationality: string;
+  country: string;
+  postalCode: string;
+  number: string;
+  city: string;
+}

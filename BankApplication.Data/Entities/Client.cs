@@ -19,8 +19,8 @@ namespace BankApplication.Data.Entities
         public string FullName => $"{FirstName} {LastName}";
         public string Email { get; set; }
         public string Phone { get; set; }   
-        public string PESEL { get; set; }       
-        public bool IsActive { get; set; }
+        public string PESEL { get; set; }
+        public bool IsActive { get; set; } 
         public DateTime CreatedDate { get; set; }
         public DateTime BirthDate { get; set; }
         public string Nationality { get; set; }
