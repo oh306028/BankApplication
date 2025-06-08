@@ -4,6 +4,7 @@ using BankApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankApplication.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250608171011_accountToLoggigsRelationChange")]
+    partial class accountToLoggigsRelationChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace BankApplication.Data.Migrations
                             IsEmployee = true,
                             Login = "adminTab",
                             PasswordHash = "AQAAAAIAAYagAAAAELBQ1+PDtUJPc31emYY8MdjP9zirLtLeWppq20jtNO5ZgkKvg0sCJ5elSbDPJULweA==",
-                            PublicId = new Guid("27e86427-9e32-4303-8e5f-897526b07422"),
+                            PublicId = new Guid("749b016f-e013-4f2d-87f0-c1b54150e0fd"),
                             WrongLoginAmount = 0
                         });
                 });
@@ -238,9 +240,6 @@ namespace BankApplication.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("ClientCode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -307,7 +306,6 @@ namespace BankApplication.Data.Migrations
                             Id = 1,
                             BirthDate = new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             City = "Gliwice",
-                            ClientCode = "UniqueCode42553211",
                             Country = "Polska",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.pl",
@@ -319,7 +317,7 @@ namespace BankApplication.Data.Migrations
                             PESEL = "",
                             Phone = "",
                             PostalCode = "",
-                            PublicId = new Guid("ef488345-45f7-4345-ba5c-3c977ddd7a90")
+                            PublicId = new Guid("f18803cc-dcd2-4bb5-9f00-36754ac54c51")
                         });
                 });
 

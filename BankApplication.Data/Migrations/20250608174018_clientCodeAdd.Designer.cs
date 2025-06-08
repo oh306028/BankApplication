@@ -4,6 +4,7 @@ using BankApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankApplication.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250608174018_clientCodeAdd")]
+    partial class clientCodeAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace BankApplication.Data.Migrations
                             IsEmployee = true,
                             Login = "adminTab",
                             PasswordHash = "AQAAAAIAAYagAAAAELBQ1+PDtUJPc31emYY8MdjP9zirLtLeWppq20jtNO5ZgkKvg0sCJ5elSbDPJULweA==",
-                            PublicId = new Guid("27e86427-9e32-4303-8e5f-897526b07422"),
+                            PublicId = new Guid("cfd29c04-e495-4211-8a1e-da25818d96bb"),
                             WrongLoginAmount = 0
                         });
                 });
@@ -307,7 +309,6 @@ namespace BankApplication.Data.Migrations
                             Id = 1,
                             BirthDate = new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             City = "Gliwice",
-                            ClientCode = "UniqueCode42553211",
                             Country = "Polska",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.pl",
@@ -319,7 +320,7 @@ namespace BankApplication.Data.Migrations
                             PESEL = "",
                             Phone = "",
                             PostalCode = "",
-                            PublicId = new Guid("ef488345-45f7-4345-ba5c-3c977ddd7a90")
+                            PublicId = new Guid("4e10a45b-64a3-49ed-a768-46d045ceb7aa")
                         });
                 });
 
