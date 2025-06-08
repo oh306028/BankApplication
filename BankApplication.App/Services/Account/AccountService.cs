@@ -18,6 +18,7 @@ namespace BankApplication.App.Services.Account
     public interface IAccountService
     {
         string Login(LoginModel model);
+        void Register(RegisterModel model);
     }
 
     public class AccountService : IAccountService
@@ -31,6 +32,36 @@ namespace BankApplication.App.Services.Account
             this.context = context;
             this.authenticationOptions = authenticationOptions;
             this.mapper = mapper;
+        }
+        public void Register(RegisterModel model)
+        {
+            var client = context.Clients.FirstOrDefault(e => e.Email.ToLower() == model.Email.ToLower());
+
+            if (client is null)
+                throw new NotFoundException("Nie znaleziono klienta lub niepoprawny kod klienta");
+
+            if (!client.IsActive)   
+                throw new NotActiveClientException("Klient nie jest aktywny");
+
+            if (client.ClientCode != model.ClientCode)
+                throw new NotFoundException("Nie znaleziono klienta lub niepoprawny kod klienta");
+
+            var passwordHasher = new PasswordHasher<BankApplication.Data.Entities.Client>();
+            var passwordHash = passwordHasher.HashPassword(client, model.Password);
+
+            var account = new BankApplication.Data.Entities.Account()
+            {
+                ClientId = client.Id,
+                IsBlocked = false,
+                Login = model.Login,
+                PasswordHash = passwordHash,
+                IsDoubleAuthenticated = false,
+                IsEmployee = false
+            };
+
+            context.Accounts.Add(account);
+            context.SaveChanges();
+
         }
 
         public string Login(LoginModel model)
@@ -51,12 +82,23 @@ namespace BankApplication.App.Services.Account
             var passwordHasher = new PasswordHasher<BankApplication.Data.Entities.Account>();
             var result = passwordHasher.VerifyHashedPassword(account, account.PasswordHash, model.Password);
 
-            if (result == PasswordVerificationResult.Failed)
-                throw new NotFoundException("Błędny login lub hasło");
+            var loggin = new Logging(account.Id);
 
+            if (result == PasswordVerificationResult.Failed)
+            {
+                loggin.IsSuccess = false;
+                throw new NotFoundException("Błędny login lub hasło");
+            }
+
+            loggin.IsSuccess = true;
+            
             var token = GenerateToken(account);
+            context.SaveChanges();
+
             return token;
         }
+
+   
 
         private string GenerateToken(BankApplication.Data.Entities.Account account)     
         {

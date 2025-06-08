@@ -38,11 +38,28 @@ namespace BankApplication.App.Services.Client
 
             var newClient = mapper.Map<BankApplication.Data.Entities.Client>(model);
             newClient.IsActive = false; //admin has to accept new client
+            newClient.ClientCode = GenerateRandomString();
 
             context.Clients.Add(newClient);
             context.SaveChanges();
 
             return newClient;
+        }
+
+        private static string GenerateRandomString()
+        {
+            var availableChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+
+            var builder = new StringBuilder(12);
+            var Random = new Random();
+
+            for (int i = 0; i <= 12; i++)
+            {
+                var index = Random.Next(availableChars.Length);
+                builder.Append(availableChars[index]);
+            }
+
+            return builder.ToString();
         }
 
         public void Update(ClientForm model)

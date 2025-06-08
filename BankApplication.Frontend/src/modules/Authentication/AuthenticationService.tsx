@@ -8,6 +8,10 @@ export default class AuthenticationService {
   public static async join(model: ClientForm): Promise<string> {
     return (await axios.post<string>("clients", model)).data;
   }
+
+  public static async register(model: RegisterModel): Promise<void> {
+    await axios.post<void>("accounts/register", model);
+  }
 }
 
 export interface LoginModel {
@@ -29,4 +33,9 @@ export interface ClientForm {
   postalCode: string;
   number: string;
   city: string;
+}
+
+export interface RegisterModel extends LoginModel {
+  confirmPassword: string;
+  clientCode: string;
 }

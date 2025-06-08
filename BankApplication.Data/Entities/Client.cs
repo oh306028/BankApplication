@@ -30,6 +30,9 @@ namespace BankApplication.Data.Entities
         public string PostalCode { get; set; }
         public string Number { get; set; }
 
+        //Unikalny kod klienta do rejestracji konta
+        public string ClientCode { get; set; }
+
 
         //Rachunek klienta => moze miec ich kilka
         public virtual List<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
@@ -89,6 +92,7 @@ namespace BankApplication.Data.Entities
                    PostalCode = "",
                    City = "Gliwice",
                    Number = "",
+                   ClientCode = "UniqueCode42553211"
                });
 
         }

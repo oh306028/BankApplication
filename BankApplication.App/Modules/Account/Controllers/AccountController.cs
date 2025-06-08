@@ -31,9 +31,9 @@ namespace BankApplication.App.Modules.Account.Controllers
         [HttpPost("register")]
         public ActionResult<string> Register([FromBody] RegisterModel model)    
         {
-            var token = accountService.Login(model);
+            accountService.Register(model); 
 
-            return Ok(token);
+            return Ok();
         }
 
 
