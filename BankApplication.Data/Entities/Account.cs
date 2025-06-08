@@ -28,7 +28,7 @@ namespace BankApplication.Data.Entities
 
         public virtual Blockade Blockade { get; set; }
         public virtual Authentication Authentication { get; set; }
-        public virtual Logging Logging { get; set; }
+        public virtual List<Logging> Loggings { get; set; } 
 
         public bool IsEmployee { get; set; }
 
@@ -52,7 +52,7 @@ namespace BankApplication.Data.Entities
 
             builder.HasOne(b => b.Blockade).WithOne(a => a.Account);
             builder.HasOne(b => b.Authentication).WithOne(a => a.Account);
-            builder.HasOne(b => b.Logging).WithOne(a => a.Account);
+            builder.HasMany(b => b.Loggings).WithOne(a => a.Account);
 
             builder.Property(e => e.IsEmployee).IsRequired();
 

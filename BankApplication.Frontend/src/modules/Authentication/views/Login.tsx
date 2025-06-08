@@ -1,22 +1,33 @@
 import { useState } from "react";
 import styles from "../../.././styles/Login.module.css";
 import { useNavigate } from "react-router";
-import AuthenticationService from "../AuthenticationService";
+import AuthenticationService, {
+  type LoginModel,
+} from "../AuthenticationService";
 import NavBar from "../../../NavBar";
 import Footer from "../../../Footer";
 
 function Login() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginModel>({
     email: "",
     login: "",
     password: "",
   });
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
+
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+      delete newErrors[capitalizedName];
+      return newErrors;
+    });
   };
 
   const navigate = useNavigate();

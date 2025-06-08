@@ -81,7 +81,7 @@ function JoinAsClient() {
     <>
       <NavBar />
       <div className={styles.joinAsClientContainer}>
-        <h2 className={styles.title}>Zostań klientem PocketBank!</h2>
+        <h2 className={styles.title}>Wniosek o zostanie klientem PocketBank</h2>
         <div className={styles.decorativeLine}></div>
 
         <form onSubmit={handleSubmit}>

@@ -15,7 +15,11 @@ namespace BankApplication.App
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(notFound.Message);
             }
-
+            catch (NotActiveClientException notActive)  
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(notActive.Message);
+            }
             catch (Exception ex)
             {
 

@@ -24,6 +24,15 @@ function NavBar() {
           >
             Dołącz
           </NavLink>
+
+          <NavLink
+            to="/accounts/register"
+            className={({ isActive }) =>
+              isActive ? navStyles.navLinksActive : navStyles.navLinks
+            }
+          >
+            Załóż konto
+          </NavLink>
           <NavLink
             to="/accounts/login"
             className={({ isActive }) =>
@@ -31,14 +40,6 @@ function NavBar() {
             }
           >
             Zaloguj się
-          </NavLink>
-          <NavLink
-            to="/accounts/register"
-            className={({ isActive }) =>
-              isActive ? navStyles.navLinksActive : navStyles.navLinks
-            }
-          >
-            Rejestracja
           </NavLink>
         </div>
       </nav>

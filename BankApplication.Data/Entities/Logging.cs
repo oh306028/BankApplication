@@ -18,6 +18,11 @@ namespace BankApplication.Data.Entities
 
         public DateTime LogInDate { get; set; }
         public bool IsSuccess { get; set; }
+
+        public Logging(int accountId)
+        {
+            AccountId = accountId;
+        }
     }
 
     public class LoggingConfiguration : IEntityTypeConfiguration<Logging>

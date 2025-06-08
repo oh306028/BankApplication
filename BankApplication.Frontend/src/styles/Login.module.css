@@ -47,6 +47,11 @@
   box-shadow: 0 0 5px rgba(0, 77, 153, 0.5);
 }
 
+.doubleForm {
+  display: flex;
+  gap: 15px;
+}
+
 .submitButton {
   width: 100%;
   padding: 12px;
@@ -66,7 +71,7 @@
 
 .decorativeLine {
   height: 3px;
-  width: 60px;
+  width: 260px;
   background-color: #004d99;
   margin: 15px auto 30px;
   border-radius: 2px;
