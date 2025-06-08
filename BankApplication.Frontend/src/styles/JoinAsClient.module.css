@@ -8,7 +8,8 @@
   box-shadow: 0 2px 8px rgba(0, 77, 153, 0.15);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #003366;
-  margin-top: 100px;
+  margin-top: 50px;
+  margin-bottom: 100px;
 }
 
 .title {
@@ -17,6 +18,30 @@
   font-size: 1.6rem;
   font-weight: bold;
   color: #004d99;
+}
+
+.select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.select option {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #004d99;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #003366;
+  background-color: white;
+  transition: border-color 0.3s ease;
+}
+
+.input:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
 }
 
 .formGroup {

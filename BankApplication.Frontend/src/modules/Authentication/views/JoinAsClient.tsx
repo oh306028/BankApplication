@@ -43,6 +43,22 @@ function JoinAsClient() {
     [key: string]: string[];
   };
 
+  const SetCountryWithPolishNationality = (e) => {
+    const selectedNationality = e.target.value;
+
+    setFormData((prev) => ({
+      ...prev,
+      nationality: selectedNationality,
+      country: selectedNationality === "Polish" ? "Polska" : "",
+    }));
+
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      delete newErrors.Nationality;
+      return newErrors;
+    });
+  };
+
   const [errors, setErrors] = useState<ApiErrorResponse>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +67,7 @@ function JoinAsClient() {
 
     try {
       const response = await AuthenticationService.join(formData);
-      navigate("/bankAccounts"); //navigate to the waiting page within the status
+      navigate("/accounts/acceptation"); //navigate to the waiting page within the status
     } catch (error: any) {
       if (error.response.status === 422) {
         setErrors(error.response.data);
@@ -186,15 +202,16 @@ function JoinAsClient() {
             <label htmlFor="nationality" className={styles.label}>
               Narodowość
             </label>
-            <input
-              type="text"
+            <select
+              onChange={SetCountryWithPolishNationality}
               id="nationality"
-              name="nationality"
-              className={styles.input}
-              value={formData.nationality}
-              onChange={handleChange}
-              placeholder="wpisz swoją narodowość"
-            />
+              className={styles.select}
+              value={formData.nationality || ""}
+            >
+              <option value="" disabled hidden></option>
+              <option value="Polish">Obywatel polski</option>
+              <option value="Foreign">Cudzoziemiec</option>
+            </select>
             {errors.Nationality && errors.Nationality.length > 0 && (
               <p className={styles.error}>{errors.Nationality[0]}</p>
             )}
@@ -205,13 +222,14 @@ function JoinAsClient() {
               Państwo
             </label>
             <input
+              disabled={formData.nationality === "Polish"}
               type="text"
               id="country"
               name="country"
               className={styles.input}
               value={formData.country}
               onChange={handleChange}
-              placeholder="wpisz swój kraj pochenia"
+              placeholder="wpisz swój kraj pochodzenia"
             />
             {errors.Country && errors.Country.length > 0 && (
               <p className={styles.error}>{errors.Country[0]}</p>
