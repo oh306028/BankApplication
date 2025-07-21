@@ -11,6 +11,17 @@ function App() {
   axios.defaults.baseURL = "https://localhost:7295/api";
   axios.defaults.headers.common["Content-Type"] = "application/json";
 
+  axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
   return (
     <>
       <Routes>

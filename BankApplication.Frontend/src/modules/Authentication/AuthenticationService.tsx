@@ -12,6 +12,10 @@ export default class AuthenticationService {
   public static async register(model: RegisterModel): Promise<void> {
     await axios.post<void>("accounts/register", model);
   }
+
+  public static async isAdmin(): Promise<boolean> {
+    return (await axios.get<boolean>("accounts/isAdmin")).data;
+  }
 }
 
 export interface LoginModel {

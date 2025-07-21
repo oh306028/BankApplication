@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using BankApplication.App.Helpers.Extensions;
 using BankApplication.App.Modules.Account.Models.Create;
 using BankApplication.App.Modules.Client.Models.Create;
 using BankApplication.App.Services.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +36,14 @@ namespace BankApplication.App.Modules.Account.Controllers
             accountService.Register(model); 
 
             return Ok();
+        }
+
+        [HttpGet("isAdmin")]
+        [Authorize]
+        public ActionResult<bool> IsAdmin()  
+        {
+            var response = accountService.IsAdmin(User.Id());
+            return Ok(response);
         }
 
 

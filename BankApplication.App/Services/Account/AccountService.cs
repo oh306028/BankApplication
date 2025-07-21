@@ -19,6 +19,7 @@ namespace BankApplication.App.Services.Account
     {
         string Login(LoginModel model);
         void Register(RegisterModel model);
+        bool IsAdmin(int userId);
     }
 
     public class AccountService : IAccountService
@@ -98,7 +99,18 @@ namespace BankApplication.App.Services.Account
             return token;
         }
 
-   
+
+        public bool IsAdmin(int userId)
+        {
+            var account = context.Accounts  
+                .FirstOrDefault(p => p.Id == userId);
+
+            if (account == null)
+                throw new NotFoundException("Nie znaleziono użytkownika");
+
+            return account.IsEmployee;
+        }
+
 
         private string GenerateToken(BankApplication.Data.Entities.Account account)     
         {

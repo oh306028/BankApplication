@@ -44,6 +44,8 @@ function Login() {
 
     try {
       const response = await AuthenticationService.login(formData);
+      console.log(response);
+      localStorage.setItem("token", response);
       navigate("/bankAccounts");
     } catch (error: any) {
       if (error.response.status === 422) {
