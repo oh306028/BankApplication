@@ -1,13 +1,13 @@
 import React from "react";
-import styles from "../../styles/AllertModal.module.css";
+import styles from "../styles/AlertModal.module.css";
 
-interface AllertModalProps {
+interface AlertModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
 }
 
-const AllertModal: React.FC<AllertModalProps> = ({
+const AlertModal: React.FC<AlertModalProps> = ({
   isOpen,
   onClose,
   children,
@@ -32,4 +32,4 @@ const AllertModal: React.FC<AllertModalProps> = ({
   );
 };
 
-export default AllertModal;
+export default AlertModal;

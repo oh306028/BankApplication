@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AuthenticationService from "../Authentication/AuthenticationService";
-import ClientAccounts from "./ClientAccounts";
+import ClientAccounts from "./ClientAccount/ClientAccounts";
 function BankAccounts() {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 

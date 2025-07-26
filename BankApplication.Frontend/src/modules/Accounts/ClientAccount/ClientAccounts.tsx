@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import AccountsService from "./AccountsService";
-import AccountsChoose from "./AccountsChoose";
-import Modal from "./AllertModal.tsx";
+import AccountsService from "../AccountsService.ts";
+import Picker from "./Picker.tsx";
+import Modal from "../../../modals/AlertModal.tsx";
+import Details from "./Details.tsx";
 
 function ClientAccounts() {
   const [hasAccounts, setHasAccounts] = useState<boolean>(false);
@@ -32,9 +33,9 @@ function ClientAccounts() {
   return (
     <>
       {hasAccounts ? (
-        <h1>Pokazuje konta</h1>
+        <Details />
       ) : (
-        <AccountsChoose onAccountCreated={refreshAccounts} />
+        <Picker onAccountCreated={refreshAccounts} />
       )}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h3 style={{ marginBottom: "15px" }}>Uwaga</h3>

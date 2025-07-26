@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import AccountsService, {
   type Form,
   type KeyValuePair,
-} from "./AccountsService";
-import styles from "../../styles/AccountsChoose.module.css";
-import Modal from "./AllertModal.tsx";
+} from "../AccountsService.ts";
+import styles from "../../../styles/Picker.module.css";
+import Modal from "../../../modals/AlertModal.tsx";
 
-function AccountsChoose({
+function Picker({
   onAccountCreated,
 }: {
   onAccountCreated: () => Promise<void>;
@@ -231,4 +231,4 @@ function AccountsChoose({
   );
 }
 
-export default AccountsChoose;
+export default Picker;
