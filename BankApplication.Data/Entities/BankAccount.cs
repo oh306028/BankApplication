@@ -12,7 +12,7 @@ namespace BankApplication.Data.Entities
     public class BankAccount
     {
         public int Id { get; set; }
-        public Guid PublicId { get; set; }
+        public Guid PublicId { get; set; } = Guid.NewGuid();
 
         public int ClientId { get; set; }
         public virtual Client Client { get; set; }

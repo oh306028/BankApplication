@@ -39,6 +39,42 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
             return Ok(list);
 
         }
-      
+
+        [HttpGet("rates")]
+        public ActionResult<List<GenericKeyValuePair>> GetInterestRates()   
+        {
+            var list = Enum.GetValues(typeof(InterestRate))
+                   .Cast<InterestRate>()
+                   .Select(e => new GenericKeyValuePair(e))
+                   .ToList();   
+
+            return Ok(list);
+
+        }
+            
+        [HttpGet("currencies")]
+        public ActionResult<List<GenericKeyValuePair>> GetCurrencies()
+        {
+            var list = Enum.GetValues(typeof(Currency))
+                   .Cast<Currency>()
+                   .Select(e => new GenericKeyValuePair(e))
+                   .ToList();
+
+            return Ok(list);
+
+        }
+
+        [HttpGet("credits")]
+        public ActionResult<List<GenericKeyValuePair>> GetCreditAmounts()
+        {
+            var list = Enum.GetValues(typeof(CreditAmount))
+                   .Cast<CreditAmount>()
+                   .Select(e => new GenericKeyValuePair(e))
+                   .ToList();
+                
+            return Ok(list);    
+
+        }
+
     }
 }

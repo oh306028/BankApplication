@@ -3,6 +3,9 @@ using BankApplication.App.Exceptions;
 using BankApplication.App.Modules.BankAccount.Models.Update;
 using BankApplication.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
+using System.Text;
+using System;
 
 namespace BankApplication.App.Services.BankAccount
 {
@@ -36,15 +39,53 @@ namespace BankApplication.App.Services.BankAccount
             if(!string.IsNullOrEmpty(model.Currency))
                 bankAccount.Currency = model.Currency;
 
-            if(model.InteresetRate.HasValue)
-                bankAccount.InteresetRate = model.InteresetRate;
+            if(model.InterestRate.HasValue)
+                bankAccount.InteresetRate = model.InterestRate;
      
             bankAccount.ClientId = account.ClientId;
-            bankAccount.Amount = 0;
+
+            if (model.Credit.HasValue)
+                bankAccount.Amount = model.Credit.Value;
+            else
+                bankAccount.Amount = 0;
+
+            bankAccount.BankAccountNumber = GenerateAccountNumber();
 
             context.BankAccounts.Add(bankAccount);
             context.SaveChanges();
 
+        }
+
+        public string GenerateAccountNumber()
+        {
+            var sb = new StringBuilder();
+            Random random = new Random();
+
+            for (int i = 0; i < 8; i++)
+            {
+                sb.Append(random.Next(0, 10));
+            }
+
+            for (int i = 0; i < 16; i++)
+            {
+                sb.Append(random.Next(0, 10));
+            }
+
+            string partialAccount = sb.ToString();
+            string controlNumber = GenerateChecksum(partialAccount);
+
+            return controlNumber + partialAccount;
+        }
+
+        private string GenerateChecksum(string accountWithoutChecksum)
+        {
+
+            string accountWithCountry = accountWithoutChecksum + "252100"; 
+
+            var number = BigInteger.Parse(accountWithCountry);
+            int checksum = 98 - (int)(number % 97);
+
+            return checksum.ToString("D2");
         }
 
     }
