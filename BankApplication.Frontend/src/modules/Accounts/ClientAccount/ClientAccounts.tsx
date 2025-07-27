@@ -8,12 +8,16 @@ function ClientAccounts() {
   const [hasAccounts, setHasAccounts] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkAdmin = async () => {
-      const result = await AccountsService.hasBankAccounts();
-
-      setHasAccounts(result);
+      try {
+        const result = await AccountsService.hasBankAccounts();
+        setHasAccounts(result);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkAdmin();
@@ -32,11 +36,14 @@ function ClientAccounts() {
 
   return (
     <>
-      {hasAccounts ? (
+      {isLoading ? (
+        <div>Ładowanie danych konta...</div>
+      ) : hasAccounts ? (
         <Details />
       ) : (
         <Picker onAccountCreated={refreshAccounts} />
       )}
+
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h3 style={{ marginBottom: "15px" }}>Uwaga</h3>
         <p>{modalMessage}</p>

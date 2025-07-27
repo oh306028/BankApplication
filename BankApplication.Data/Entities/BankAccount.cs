@@ -19,7 +19,7 @@ namespace BankApplication.Data.Entities
 
         public string BankAccountNumber { get; set; }
         public string Currency { get; set; }
-        public decimal Amount { get; set; }
+        public decimal Balance { get; set; }    
         public int Type { get; set; }
         public decimal? InteresetRate { get; set; }
 
@@ -43,7 +43,7 @@ namespace BankApplication.Data.Entities
                 .HasMaxLength(100);
 
             builder.Property(c => c.Currency).IsRequired().HasMaxLength(10);
-            builder.Property(a => a.Amount).IsRequired().HasPrecision(20, 2);
+            builder.Property(a => a.Balance).IsRequired().HasPrecision(20, 2);
 
             builder.Property(t => t.Type).IsRequired();
             builder.Ignore(t => t.DisplayType);

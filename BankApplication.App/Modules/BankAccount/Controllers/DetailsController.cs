@@ -1,5 +1,7 @@
-﻿using BankApplication.App.Helpers.Extensions;
+﻿using AutoMapper;
+using BankApplication.App.Helpers.Extensions;
 using BankApplication.App.Helpers.Models;
+using BankApplication.App.Modules.BankAccount.Models.Details;
 using BankApplication.App.Modules.Client.Models.Details;
 using BankApplication.App.Services.BankAccount;
 using BankApplication.Data.Enums;
@@ -14,9 +16,12 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
     {
         private readonly IDetailService service;
 
-        public DetailsController(IDetailService service)
+        private readonly IMapper mapper;
+
+        public DetailsController(IDetailService service, IMapper mapper)
         {
             this.service = service;
+            this.mapper = mapper;
         }
 
         [HttpGet()]
@@ -27,6 +32,29 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
             
             return Ok(bankAccount.Any());
         }
+
+        [HttpGet("{type}")]
+        public ActionResult<BankAccountDetails> GetDetailsByType(BankAccountType type)
+        {
+            var details = service.GetDetailsByType(User.Id(), type);
+
+            return Ok(mapper.Map<BankAccountDetails>(details));
+        }
+
+
+        [HttpGet("own-types")]
+        public ActionResult<List<GenericKeyValuePair>> GetOwnTypesOfAccounts()
+        {
+            var list = service.GetOwnTypes(User.Id());
+
+            var enums = Enum.GetValues(typeof(BankAccountType))
+                   .Cast<BankAccountType>()
+                   .Select(e => new GenericKeyValuePair(e))
+                   .ToList();
+
+            return enums.Where(p => list.Contains(p.Key)).ToList();
+        }
+
 
         [HttpGet("types")]
         public ActionResult<List<GenericKeyValuePair>> GetTypes()

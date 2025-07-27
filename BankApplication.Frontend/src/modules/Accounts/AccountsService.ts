@@ -8,6 +8,14 @@ export default class AccountsService {
     return (await axios.get<KeyValuePair[]>(`bank-accounts/types`)).data;
   }
 
+  public static async getOwnTypes(): Promise<KeyValuePair[]> {
+    return (await axios.get<KeyValuePair[]>(`bank-accounts/own-types`)).data;
+  }
+
+  public static async getDetailsByType(type: string): Promise<Details> {
+    return (await axios.get<Details>(`bank-accounts/${type}`)).data;
+  }
+
   public static async getInterestRates(): Promise<KeyValuePair[]> {
     return (await axios.get<KeyValuePair[]>(`bank-accounts/rates`)).data;
   }
@@ -36,4 +44,12 @@ export interface Form {
   currency: string;
   interestRate?: number;
   credit?: number;
+}
+
+export interface Details {
+  accountNumber: string;
+  balance: number;
+  currency: string;
+  interestRate?: number;
+  publicId: string;
 }

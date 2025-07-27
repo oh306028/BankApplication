@@ -6,12 +6,16 @@ using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 using System.Text;
 using System;
+using BankApplication.App.Modules.BankAccount.Transfers.Models;
+using BankApplication.Data.Entities;
+using BankApplication.Data.Enums;
 
 namespace BankApplication.App.Services.BankAccount
 {
     public interface IUpdateService
     {
         void Create(int userId, CreateBankAccountModel model);
+        void SendTransfer(Guid accountId, SendTransferModel model);
     }
 
     public class UpdateService : IUpdateService
@@ -45,9 +49,9 @@ namespace BankApplication.App.Services.BankAccount
             bankAccount.ClientId = account.ClientId;
 
             if (model.Credit.HasValue)
-                bankAccount.Amount = model.Credit.Value;
+                bankAccount.Balance = model.Credit.Value;
             else
-                bankAccount.Amount = 0;
+                bankAccount.Balance = 0;
 
             bankAccount.BankAccountNumber = GenerateAccountNumber();
 
@@ -55,6 +59,63 @@ namespace BankApplication.App.Services.BankAccount
             context.SaveChanges();
 
         }
+
+        public void SendTransfer(Guid accountId, SendTransferModel model)
+        {
+           var bankAccountTo = context.BankAccounts 
+                .Include(p => p.TransfersReceived)
+                .FirstOrDefault(p => p.BankAccountNumber == model.AccountToNumber);
+                
+            if (bankAccountTo == null)
+                throw new NotFoundException("Nie znaleziono konta bankowego o takim numerze");
+
+            var bankAccountFrom = context.BankAccounts
+                .Include(p => p.TransfersReceived)
+                .Single(p => p.PublicId == accountId);
+
+            var transfer = new Transfer();
+            mapper.Map<Transfer>(model);
+
+            transfer.TransferDate = DateTime.Now;
+            transfer.Status = (int)TransferStatus.Executed;
+
+            transfer.AccountFromId = bankAccountFrom.Id;
+            transfer.AccountToId = bankAccountTo.Id;
+
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                if (bankAccountFrom.Balance < model.Amount)
+                    throw new InvalidOperationException("Niewystarczające środki na koncie.");
+
+                context.Database.ExecuteSqlRaw(
+                    "UPDATE BankAccounts SET Balance = Balance - {0} WHERE Id = {1}",
+                    model.Amount,
+                    bankAccountFrom.Id
+                );
+
+                context.Database.ExecuteSqlRaw(
+                    "UPDATE BankAccounts SET Balance = Balance + {0} WHERE Id = {1}",
+                    model.Amount,
+                    bankAccountTo.Id
+                );
+
+                transfer.Status = (int)TransferStatus.Executed;
+                context.Transfers.Add(transfer);
+
+                context.SaveChanges(); 
+                transaction.Commit();
+            }
+            catch
+            {
+                transfer.Status = (int)TransferStatus.Rejected;
+                context.Transfers.Add(transfer); 
+                context.SaveChanges();      
+                transaction.Rollback();               
+            }
+
+        }
+
 
         public string GenerateAccountNumber()
         {
