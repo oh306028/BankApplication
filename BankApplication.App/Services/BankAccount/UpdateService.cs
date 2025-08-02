@@ -74,7 +74,7 @@ namespace BankApplication.App.Services.BankAccount
                 .Single(p => p.PublicId == accountId);
 
             var transfer = new Transfer();
-            mapper.Map<Transfer>(model);
+            transfer = mapper.Map<Transfer>(model);
 
             transfer.TransferDate = DateTime.Now;
             transfer.Status = (int)TransferStatus.Executed;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BankApplication.App.Modules.BankAccount.Models.Details;
 using BankApplication.App.Modules.BankAccount.Transfers.Models;
+using BankApplication.App.Resolvers;
 using BankApplication.Data.Entities;
 
 namespace BankApplication.App
@@ -16,6 +17,13 @@ namespace BankApplication.App
 
             CreateMap<SendTransferModel, Transfer>()
                 .ForSourceMember(p => p.AccountToNumber, o => o.DoNotValidate());
+
+            CreateMap<Transfer, TransferDetails>()
+                .ForMember(p => p.Sender, o => o.MapFrom<SenderResolver>())
+                .ForMember(p => p.Receiver, o => o.MapFrom<ReceiverResolver>())
+                .ForMember(p => p.ReceiverNumber, o => o.MapFrom<ReceiverNumberResolver>())     
+                .ForMember(p => p.SenderNumber, o => o.MapFrom<SenderNumberResolver>());        
+
         }
     }
 }

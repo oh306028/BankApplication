@@ -1,3 +1,4 @@
+using BankApplication.App.Resolvers;
 using BankApplication.Data;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -48,6 +49,12 @@ namespace BankApplication.App
             builder.Services.Scan(scan => scan
                     .FromAssemblies(Assembly.GetExecutingAssembly())
                     .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Service")))
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime());
+
+            builder.Services.Scan(scan => scan
+                    .FromAssemblies(Assembly.GetExecutingAssembly())
+                    .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Resolver")))
                     .AsImplementedInterfaces()
                     .WithScopedLifetime());
 

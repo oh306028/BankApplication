@@ -36,6 +36,13 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
             return Ok(mapper.Map<List<TransferDetails>>(transfers));
         }
 
+        [HttpGet]
+        public ActionResult<List<TransferDetails>> GetList([FromRoute] Guid accountId)  
+        {
+            var transfers = transfersDetails.GetList(accountId);    
+            return Ok(mapper.Map<List<TransferDetails>>(transfers));
+        }
+
         [HttpPost]
         public ActionResult Send([FromRoute] Guid accountId, SendTransferModel model)
         {

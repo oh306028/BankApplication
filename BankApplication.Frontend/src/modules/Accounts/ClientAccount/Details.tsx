@@ -5,11 +5,22 @@ import AccountsService, {
 } from "../AccountsService";
 import ClientNavBar from "./ClientNavBar";
 import SendTransfer from "../Tranfers/SendTransfer";
+import Modal from "../../../modals/AlertModal.tsx";
+import TransferList from "../Tranfers/TransferList.tsx";
+import ReceivedTransfers from "../Tranfers/ReceivedTransfers.tsx";
+import SentTransfers from "../Tranfers/SentTransfers.tsx";
 
 function Details() {
   const [ownTypes, setOwnTypes] = useState<KeyValuePair[]>([]);
   const [details, setDetails] = useState<Details>();
   const [isTransferActive, setIsTransferActive] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [onlySentTransfers, setOnlySentTransfers] = useState<boolean>(false);
+  const [onlyReceivedTransfers, setOnlyReceivedTransfers] =
+    useState<boolean>(false);
+
+  const [showHistory, setShowHistory] = useState<boolean>(false);
   let publicId = "";
 
   const getOwnTypes = async () => {
@@ -31,11 +42,22 @@ function Details() {
     getOwnTypes();
   }, []);
 
+  const showModal = (message: string) => {
+    setModalMessage(message);
+    setIsModalOpen(true);
+  };
+
   useEffect(() => {
     if (ownTypes.length > 0) {
       fetchDetails(ownTypes[0].value);
     }
   }, [ownTypes]);
+
+  const refreshAccounts = async () => {
+    fetchDetails(ownTypes[0].value);
+    showModal("Przelew został wykonany pomyślnie");
+    toggleTransfer();
+  };
 
   return (
     <>
@@ -62,13 +84,46 @@ function Details() {
               </b>
             </p>
             <button onClick={toggleTransfer}>Nowy przelew</button>
-            {isTransferActive && <SendTransfer />}
+            {isTransferActive && (
+              <SendTransfer
+                publicId={details?.publicId}
+                onTransferSent={refreshAccounts}
+              />
+            )}
           </div>
         </div>
 
-        <div>Historia transakcji</div>
-        <ul></ul>
+        <div>
+          <h4 onClick={() => setShowHistory(!showHistory)}>
+            Historia transakcji
+          </h4>
+          {showHistory && (
+            <>
+              {" "}
+              <div
+                onClick={() => setOnlyReceivedTransfers(!onlyReceivedTransfers)}
+              >
+                Przychodzące
+              </div>
+              <div onClick={() => setOnlySentTransfers(!onlySentTransfers)}>
+                Wychodzące
+              </div>
+              {!onlyReceivedTransfers &&
+                !onlySentTransfers &&
+                details?.publicId && (
+                  <TransferList publicId={details?.publicId} />
+                )}
+              {onlyReceivedTransfers && <ReceivedTransfers />}
+              {onlySentTransfers && <SentTransfers />}
+            </>
+          )}
+        </div>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h3 style={{ marginBottom: "15px" }}>Uwaga</h3>
+        <p>{modalMessage}</p>
+      </Modal>
     </>
   );
 }

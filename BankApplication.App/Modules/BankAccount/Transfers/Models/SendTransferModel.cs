@@ -19,7 +19,7 @@ namespace BankApplication.App.Modules.BankAccount.Transfers.Models
             RuleFor(p => p.Title).NotEmpty().WithMessage("Tytuł jest wymagany");
             RuleFor(p => p.Amount).NotEmpty().WithMessage("Kwota jest wymagana");  
             
-            RuleFor(p => p.Amount).LessThanOrEqualTo(0).WithMessage("Kwota nie może być mniejsza lub równa 0");
+            RuleFor(p => p.Amount).GreaterThanOrEqualTo(0).WithMessage("Kwota nie może być mniejsza lub równa 0");
         }
     }
 }

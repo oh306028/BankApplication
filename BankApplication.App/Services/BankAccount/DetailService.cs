@@ -14,6 +14,7 @@ namespace BankApplication.App.Services.BankAccount
        BankApplication.Data.Entities.BankAccount GetDetailsByType(int userId, BankAccountType type);
        List<Transfer> GetTransfersSent(Guid publicId);
         public List<Transfer> GetTransfersReceived(Guid publicId);
+        List<Transfer> GetList(Guid publicId);
     }
 
     public class DetailService : IDetailService
@@ -68,6 +69,23 @@ namespace BankApplication.App.Services.BankAccount
                 throw new NotFoundException("Nie znaleziono konta bankowego"); 
 
             return bankAccount.TransfersSent;      
+        }
+
+        public List<Transfer> GetList(Guid publicId)
+        {
+            var bankAccount = context.BankAccounts
+                .Include(p => p.TransfersSent)
+                .Include(p => p.TransfersReceived)
+                .FirstOrDefault(p => p.PublicId == publicId);
+
+            if (bankAccount == null)
+                throw new NotFoundException("Nie znaleziono konta bankowego");
+
+            var list = new List<Transfer>();
+            list.AddRange(bankAccount.TransfersSent);
+            list.AddRange(bankAccount.TransfersReceived);
+
+            return list;
         }
 
         public List<Transfer> GetTransfersReceived(Guid publicId) 
