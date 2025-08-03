@@ -31,6 +31,10 @@ export default class AccountsService {
   public static async createBankAccount(model: Form): Promise<void> {
     await axios.post<KeyValuePair[]>(`bank-accounts`, model);
   }
+
+  public static async getClientList(): Promise<ClientDetails[]> {
+    return (await axios.get<ClientDetails[]>(`clients`)).data;
+  }
 }
 
 export interface KeyValuePair {
@@ -52,4 +56,16 @@ export interface Details {
   currency: string;
   interestRate?: number;
   publicId: string;
+}
+
+export interface ClientDetails {
+  fullName: string;
+  email: string;
+  phone: string;
+  nationality: string;
+  country: string;
+  city: string;
+  postalCode: string;
+  number: string;
+  pesel: string;
 }

@@ -1,0 +1,226 @@
+.detailsPage {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 20px auto;
+  align-items: flex-start;
+}
+
+.accountsPanel {
+  flex: 0 0 250px;
+  background-color: #f2f8ff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #cce0ff;
+}
+
+.panelTitle {
+  text-align: center;
+  color: #004d99;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.accountsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.accountsList li {
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+  color: #003366;
+}
+
+.accountsList li:hover {
+  background-color: #e6f0ff;
+}
+
+.accountsList .activeAccount {
+  background-color: #004d99;
+  color: white;
+  font-weight: bold;
+}
+
+.mainContent {
+  flex: 1;
+}
+
+.detailsBox {
+  background-color: #f2f8ff;
+  border: 1px solid #cce0ff;
+  border-radius: 8px;
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.balanceLabel {
+  margin: 0 0 5px 0;
+  color: #003366;
+  font-size: 0.9rem;
+}
+
+.balanceAmount {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #004d99;
+}
+
+.currency {
+  font-size: 1.5rem;
+  font-weight: normal;
+  color: #004d99;
+  margin-left: 5px;
+}
+
+.accountNumberInfo {
+  text-align: right;
+  color: #003366;
+}
+.accountNumberInfo p {
+  margin: 0 0 5px 0;
+}
+.accountNumber {
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+
+.actionButton {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #004d99;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: #003366;
+}
+
+.historySection {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f8fbff;
+  border-radius: 8px;
+  border: 1px solid #e6f0ff;
+}
+
+.historyTitle {
+  font-size: 1.4rem;
+  color: #004d99;
+  margin: 0 0 20px 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.arrow {
+  border: solid #004d99;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 4px;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.arrowUp {
+  transform: rotate(-135deg);
+}
+
+.filterButtons {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.filterButtons button {
+  padding: 8px 16px;
+  border: 1px solid #cce0ff;
+  background-color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.filterButtons .activeFilter {
+  background-color: #004d99;
+  color: white;
+  border-color: #004d99;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.filterButtons button {
+  padding: 8px 16px;
+  border: 1px solid #cce0ff;
+  background-color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.filterButtons .activeFilter {
+  background-color: #004d99;
+  color: white;
+  border-color: #004d99;
+}
+
+.downloadButton {
+  padding: 8px 16px;
+  font-weight: 500;
+  color: #004d99;
+  background-color: transparent;
+  border: 1px solid #004d99;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.downloadButton:hover {
+  background-color: #e6f0ff;
+  border-color: #003366;
+}
+
+.downloadButton:disabled {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

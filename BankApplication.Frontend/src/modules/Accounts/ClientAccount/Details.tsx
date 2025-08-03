@@ -1,129 +1,223 @@
 import { useEffect, useState } from "react";
 import AccountsService, {
   type KeyValuePair,
-  type Details,
+  type Details as AccountDetails,
 } from "../AccountsService";
 import ClientNavBar from "./ClientNavBar";
 import SendTransfer from "../Tranfers/SendTransfer";
-import Modal from "../../../modals/AlertModal.tsx";
-import TransferList from "../Tranfers/TransferList.tsx";
-import ReceivedTransfers from "../Tranfers/ReceivedTransfers.tsx";
-import SentTransfers from "../Tranfers/SentTransfers.tsx";
+import Modal from "../../../modals/AlertModal";
+import TransferList from "../Tranfers/TransferList";
+import styles from "../../../styles/Details.module.css";
+import TransferService from "../Tranfers/TransferService";
+import Footer from "../../../Footer";
+
+type HistoryFilter = "all" | "sent" | "received";
 
 function Details() {
   const [ownTypes, setOwnTypes] = useState<KeyValuePair[]>([]);
-  const [details, setDetails] = useState<Details>();
+  const [details, setDetails] = useState<AccountDetails | null>(null);
+  const [selectedAccountType, setSelectedAccountType] = useState<string | null>(
+    null
+  );
   const [isTransferActive, setIsTransferActive] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [onlySentTransfers, setOnlySentTransfers] = useState<boolean>(false);
-  const [onlyReceivedTransfers, setOnlyReceivedTransfers] =
-    useState<boolean>(false);
-
+  const [historyFilter, setHistoryFilter] = useState<HistoryFilter>("all");
   const [showHistory, setShowHistory] = useState<boolean>(false);
-  let publicId = "";
-
-  const getOwnTypes = async () => {
-    const result = await AccountsService.getOwnTypes();
-    setOwnTypes(result);
-  };
-
-  const fetchDetails = async (type: string) => {
-    const result = await AccountsService.getDetailsByType(type);
-    publicId = result.publicId;
-    setDetails(result);
-  };
-
-  const toggleTransfer = () => {
-    setIsTransferActive(!isTransferActive);
-  };
+  const [transferListVersion, setTransferListVersion] = useState(0);
 
   useEffect(() => {
-    getOwnTypes();
+    const getInitialData = async () => {
+      const result = await AccountsService.getOwnTypes();
+      setOwnTypes(result);
+      if (result.length > 0) {
+        setSelectedAccountType(result[0].value);
+      }
+    };
+    getInitialData();
   }, []);
 
+  useEffect(() => {
+    const fetchDetails = async () => {
+      if (!selectedAccountType) return;
+      try {
+        const result = await AccountsService.getDetailsByType(
+          selectedAccountType
+        );
+        setDetails(result);
+        setIsTransferActive(false);
+        setShowHistory(false);
+        setHistoryFilter("all");
+      } catch (error) {
+        setDetails(null);
+      }
+    };
+    fetchDetails();
+  }, [selectedAccountType]);
+
+  const toggleTransfer = () => setIsTransferActive(!isTransferActive);
   const showModal = (message: string) => {
     setModalMessage(message);
     setIsModalOpen(true);
   };
 
-  useEffect(() => {
-    if (ownTypes.length > 0) {
-      fetchDetails(ownTypes[0].value);
-    }
-  }, [ownTypes]);
-
-  const refreshAccounts = async () => {
-    fetchDetails(ownTypes[0].value);
+  const handleTransferSent = async () => {
+    if (!selectedAccountType) return;
+    const result = await AccountsService.getDetailsByType(selectedAccountType);
+    setDetails(result);
     showModal("Przelew został wykonany pomyślnie");
     toggleTransfer();
+    setTransferListVersion((currentVersion) => currentVersion + 1);
   };
+
+  const handleDownloadHistory = async () => {
+    if (!details) {
+      showModal("Nie można pobrać historii, brak danych konta.");
+      return;
+    }
+
+    try {
+      await TransferService.downloadTransfersPdf(details.publicId);
+    } catch (error) {
+      showModal("Błąd podczas pobierania historii przelewów.");
+    }
+  };
+
+  const handleDownloadDetails = async () => {};
 
   return (
     <>
       <ClientNavBar />
-      <div>
-        <h1>Moje konta bankowe</h1>
-        <div>
-          <ul>
+      <div className={styles.detailsPage}>
+        <div className={styles.accountsPanel}>
+          <h2 className={styles.panelTitle}>Twoje konta</h2>
+          <ul className={styles.accountsList}>
             {ownTypes.map((p) => (
-              <li onClick={() => fetchDetails(p.value)} key={p.key}>
+              <li
+                onClick={() => setSelectedAccountType(p.value)}
+                key={p.key}
+                className={
+                  selectedAccountType === p.value ? styles.activeAccount : ""
+                }
+              >
                 {p.name}
               </li>
             ))}
           </ul>
-          <div>
-            <p>
-              Numer konta:<b>{details?.accountNumber}</b>
-            </p>
-            <p>
-              Saldo:{" "}
-              <b>
-                {details?.balance.toFixed(2)}
-                <span> {details?.currency}</span>
-              </b>
-            </p>
-            <button onClick={toggleTransfer}>Nowy przelew</button>
-            {isTransferActive && (
-              <SendTransfer
-                publicId={details?.publicId}
-                onTransferSent={refreshAccounts}
-              />
-            )}
-          </div>
         </div>
 
-        <div>
-          <h4 onClick={() => setShowHistory(!showHistory)}>
-            Historia transakcji
-          </h4>
-          {showHistory && (
+        <div className={styles.mainContent}>
+          {details ? (
             <>
-              {" "}
-              <div
-                onClick={() => setOnlyReceivedTransfers(!onlyReceivedTransfers)}
-              >
-                Przychodzące
+              <div className={styles.detailsBox}>
+                <div className={styles.balanceInfo}>
+                  <p className={styles.balanceLabel}>Dostępne środki</p>
+                  <p className={styles.balanceAmount}>
+                    {details.balance.toFixed(2)}
+                    <span className={styles.currency}> {details.currency}</span>
+                  </p>
+                </div>
+                <div className={styles.accountNumberInfo}>
+                  <p>Numer konta</p>
+                  <p className={styles.accountNumber}>
+                    {details.accountNumber}
+                  </p>
+                </div>
+                <div className={styles.container}>
+                  <button
+                    onClick={toggleTransfer}
+                    className={styles.actionButton}
+                  >
+                    {isTransferActive ? "Anuluj przelew" : "Nowy przelew"}
+                  </button>
+
+                  <button
+                    onClick={handleDownloadDetails}
+                    className={styles.downloadButton}
+                  >
+                    Pobierz wyciąg
+                  </button>
+                </div>
               </div>
-              <div onClick={() => setOnlySentTransfers(!onlySentTransfers)}>
-                Wychodzące
-              </div>
-              {!onlyReceivedTransfers &&
-                !onlySentTransfers &&
-                details?.publicId && (
-                  <TransferList publicId={details?.publicId} />
+
+              {isTransferActive && (
+                <SendTransfer
+                  publicId={details.publicId}
+                  onTransferSent={handleTransferSent}
+                />
+              )}
+
+              <div className={styles.historySection}>
+                <h3
+                  onClick={() => setShowHistory(!showHistory)}
+                  className={styles.historyTitle}
+                >
+                  Historia transakcji
+                  <span
+                    className={`${styles.arrow} ${
+                      showHistory ? styles.arrowUp : ""
+                    }`}
+                  ></span>
+                </h3>
+                {showHistory && (
+                  <>
+                    <div className={styles.toolbar}>
+                      <div className={styles.filterButtons}>
+                        <button
+                          onClick={() => setHistoryFilter("all")}
+                          className={
+                            historyFilter === "all" ? styles.activeFilter : ""
+                          }
+                        >
+                          Wszystkie
+                        </button>
+                        <button
+                          onClick={() => setHistoryFilter("received")}
+                          className={
+                            historyFilter === "received"
+                              ? styles.activeFilter
+                              : ""
+                          }
+                        >
+                          Przychodzące
+                        </button>
+                        <button
+                          onClick={() => setHistoryFilter("sent")}
+                          className={
+                            historyFilter === "sent" ? styles.activeFilter : ""
+                          }
+                        >
+                          Wychodzące
+                        </button>
+                      </div>
+                      <button
+                        onClick={handleDownloadHistory}
+                        className={styles.downloadButton}
+                      >
+                        Pobierz historię
+                      </button>
+                    </div>
+
+                    <TransferList
+                      key={transferListVersion}
+                      publicId={details.publicId}
+                      accountNumber={details.accountNumber}
+                      filter={historyFilter}
+                    />
+                  </>
                 )}
-              {onlyReceivedTransfers && <ReceivedTransfers />}
-              {onlySentTransfers && <SentTransfers />}
+              </div>
             </>
+          ) : (
+            <p>Ładowanie danych konta...</p>
           )}
         </div>
       </div>
-
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h3 style={{ marginBottom: "15px" }}>Uwaga</h3>
         <p>{modalMessage}</p>
       </Modal>
+
+      <Footer />
     </>
   );
 }

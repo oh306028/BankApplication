@@ -20,6 +20,11 @@ namespace BankApplication.App
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync(notActive.Message);
             }
+            catch(UnauthorizedAccessException ex)
+            {
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync(ex.Message);
+            }
             catch (Exception ex)
             {
 

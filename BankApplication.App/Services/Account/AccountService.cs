@@ -17,7 +17,7 @@ namespace BankApplication.App.Services.Account
 {
     public interface IAccountService
     {
-        string Login(LoginModel model);
+        Task<string> Login(LoginModel model);
         void Register(RegisterModel model);
         bool IsAdmin(int userId);
     }
@@ -65,39 +65,82 @@ namespace BankApplication.App.Services.Account
 
         }
 
-        public string Login(LoginModel model)
+        public async Task<string> Login(LoginModel model)
         {
-            var client = context.Clients
-                .FirstOrDefault(e => e.Email.ToLower() == model.Email.ToLower());
+            var account = await context.Accounts
+                .Include(c => c.Client)
+                .FirstOrDefaultAsync(l => l.Login == model.Login);
 
-            var account = context.Accounts
-                                .Include(c => c.Client)
-                                .FirstOrDefault(l => l.Login == model.Login);
-
-            if (client is null)
-                throw new NotFoundException("Nie znaleziono klienta");
-
-            if(account is null)
+            if (account is null)
                 throw new NotFoundException("Błędny login lub hasło");
+
+            await EnsureAccountNotBlocked(account.Id);
 
             var passwordHasher = new PasswordHasher<BankApplication.Data.Entities.Account>();
             var result = passwordHasher.VerifyHashedPassword(account, account.PasswordHash, model.Password);
 
-            var loggin = new Logging(account.Id);
+            var logging = new Logging(account.Id)
+            {
+                IsSuccess = result == PasswordVerificationResult.Success
+            };
+            context.Loggings.Add(logging);
+            await context.SaveChangesAsync();
+
 
             if (result == PasswordVerificationResult.Failed)
             {
-                loggin.IsSuccess = false;
-                throw new NotFoundException("Błędny login lub hasło");
+                await TryApplyLoginBlockade(account.Id);
+                throw new NotFoundException("Błędny login lub hasło. Konto zostanie zablokowane po 3 nieudanych próbach.");
             }
 
-            loggin.IsSuccess = true;
-            
             var token = GenerateToken(account);
-            context.SaveChanges();
-
             return token;
         }
+
+        private async Task EnsureAccountNotBlocked(int accountId)
+        {
+            var activeBlockade = await context.Blockades
+                .FirstOrDefaultAsync(b => b.AccountId == accountId && b.IsActive);
+
+            if (activeBlockade != null)
+            {
+                if (activeBlockade.BlockDateTo.HasValue && activeBlockade.BlockDateTo <= DateTime.UtcNow)
+                {
+                    activeBlockade.IsActive = false;
+                    context.Blockades.Update(activeBlockade);
+                    await context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new UnauthorizedAccessException("Konto zostało zablokowane z powodu wielu nieudanych prób logowania. Odczekaj 15 minut.");
+                }
+            }
+        }
+
+        private async Task TryApplyLoginBlockade(int accountId)
+        {
+            var recentAttempts = await context.Loggings
+                .Where(l => l.AccountId == accountId)
+                .OrderByDescending(l => l.LogInDate)
+                .Take(3)
+                .ToListAsync();
+
+            if (recentAttempts.Count == 3 && recentAttempts.All(l => !l.IsSuccess))
+            {
+                var blockade = new Blockade
+                {
+                    AccountId = accountId,
+                    Reason = "3 błędne próby logowania",
+                    BlockDateFrom = DateTime.UtcNow,
+                    BlockDateTo = DateTime.UtcNow.AddMinutes(15),
+                    IsActive = true
+                };
+
+                context.Blockades.Add(blockade);
+                await context.SaveChangesAsync();
+            }
+        }
+
 
 
         public bool IsAdmin(int userId)

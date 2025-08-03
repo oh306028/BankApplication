@@ -51,7 +51,10 @@ namespace BankApplication.App.Services.Client
 
         public List<ClientDetails> List()
         {
-            var clients = context.Clients.AsNoTracking().ToList();
+            var clients = context.Clients    
+                .Include(p => p.Account)
+                .Where(p => p.Account.IsEmployee == false && p.IsActive == true)
+                .AsNoTracking().ToList();
             var result = mapper.Map<List<ClientDetails>>(clients);
 
             return result;

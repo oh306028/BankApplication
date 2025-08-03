@@ -51,7 +51,7 @@
 }
 
 .formGroup textarea {
-  resize: vertical; /* Pozwala na zmianę wysokości pola tekstowego */
+  resize: vertical;
 }
 
 .submitButton {
@@ -65,7 +65,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 10px;
-  align-self: center; /* Wyśrodkowanie przycisku */
+  align-self: center;
   width: 50%;
 }
 

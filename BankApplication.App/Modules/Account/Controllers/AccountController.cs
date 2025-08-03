@@ -23,9 +23,9 @@ namespace BankApplication.App.Modules.Account.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<string> Login([FromBody] LoginModel model)
+        public async Task<ActionResult<string>> Login([FromBody] LoginModel model)
         {
-            var token = accountService.Login(model);
+            var token = await accountService.Login(model);
 
             return Ok(token);
         }

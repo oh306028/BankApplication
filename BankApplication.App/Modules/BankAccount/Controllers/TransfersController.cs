@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
 using BankApplication.App.Modules.BankAccount.Transfers.Models;
+using BankApplication.App.Printers;
 using BankApplication.App.Services.BankAccount;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QuestPDF.Fluent;
 
 namespace BankApplication.App.Modules.BankAccount.Controllers
 {
     [Route("api/bank-accounts/{accountId}/transfers")]
     [ApiController]
+    [Authorize]
     public class TransfersController : ControllerBase   
     {   
         private readonly IUpdateService transfers; 
@@ -43,12 +47,31 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
             return Ok(mapper.Map<List<TransferDetails>>(transfers));
         }
 
+        [HttpGet]
+        public ActionResult<List<TransferDetails>> GetAll()
+        {
+            var transfers = transfersDetails.GetAll();
+            return Ok(mapper.Map<List<TransferDetails>>(transfers));
+        }
+
         [HttpPost]
         public ActionResult Send([FromRoute] Guid accountId, SendTransferModel model)
         {
             transfers.SendTransfer(accountId, model);
             return Ok();
         }
+
+        [HttpGet("download")]
+        public ActionResult GetPdf([FromRoute] Guid accountId)    
+        {
+            var list = transfersDetails.GetList(accountId); 
+            var document = mapper.Map<List<TransferDetails>>(list);
+            var printer = new TransferHistoryPdfPrinter(document);  
+            var pdfBytes = printer.GeneratePdf();
+
+            return File(pdfBytes, "application/pdf", $"HistoriaPrzelewow-{DateTime.Now.Date}.pdf");
+        }
+
 
     }
 }

@@ -1,12 +1,14 @@
 ﻿using BankApplication.App.Helpers.Extensions;
 using BankApplication.App.Modules.BankAccount.Models.Update;
 using BankApplication.App.Services.BankAccount;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankApplication.App.Modules.BankAccount.Controllers
 {
     [Route("api/bank-accounts")]
     [ApiController]
+    [Authorize]
     public class UpdateController : ControllerBase
     {
         private readonly IUpdateService service;

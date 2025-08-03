@@ -1,5 +1,6 @@
 ﻿using BankApplication.App.Modules.Client.Models.Details;
 using BankApplication.App.Services.Client;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace BankApplication.App.Modules.Client.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<List<ClientDetails>> GetList()
         {
             var clients = service.List();

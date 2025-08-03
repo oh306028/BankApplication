@@ -1,7 +1,13 @@
 import { NavLink } from "react-router";
 import navStyles from "../../../styles/ClientNavBar.module.css";
 
-function ClientNavBar() {
+export interface ClientNavBarProps {
+  isAdmin?: boolean;
+}
+const ClientNavBar: React.FC<ClientNavBarProps> = ({ isAdmin }) => {
+  const deleteToken = () => {
+    localStorage.removeItem("token");
+  };
   return (
     <>
       <nav className={navStyles.navbar}>
@@ -16,21 +22,27 @@ function ClientNavBar() {
           </NavLink>
         </div>
         <div>
-          <NavLink
-            to="/accounts/details"
-            className={({ isActive }) =>
-              isActive ? navStyles.navLinksActive : navStyles.navLinks
-            }
-          >
-            Mój profil
-          </NavLink>
+          {!isAdmin && (
+            <NavLink
+              to="/accounts/details"
+              className={({ isActive }) =>
+                isActive ? navStyles.navLinksActive : navStyles.navLinks
+              }
+            >
+              Mój profil
+            </NavLink>
+          )}
 
-          <button className={`${navStyles.navLinks} ${navStyles.myButton}`}>
+          <NavLink
+            to="/"
+            className={`${navStyles.navLinks} ${navStyles.myButton}`}
+            onClick={deleteToken}
+          >
             Wyloguj
-          </button>
+          </NavLink>
         </div>
       </nav>
     </>
   );
-}
+};
 export default ClientNavBar;

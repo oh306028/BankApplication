@@ -15,6 +15,7 @@ namespace BankApplication.App.Services.BankAccount
        List<Transfer> GetTransfersSent(Guid publicId);
         public List<Transfer> GetTransfersReceived(Guid publicId);
         List<Transfer> GetList(Guid publicId);
+        List<Transfer> GetAll();
     }
 
     public class DetailService : IDetailService
@@ -62,13 +63,13 @@ namespace BankApplication.App.Services.BankAccount
         public List<Transfer> GetTransfersSent(Guid publicId)
         {
             var bankAccount = context.BankAccounts
-                .Include(p => p.TransfersSent)
+                .Include(p => p.TransfersSent)               
                 .FirstOrDefault(p => p.PublicId == publicId);
 
             if (bankAccount == null)
                 throw new NotFoundException("Nie znaleziono konta bankowego"); 
 
-            return bankAccount.TransfersSent;      
+            return bankAccount.TransfersSent.OrderByDescending(p => p.TransferDate).ToList();      
         }
 
         public List<Transfer> GetList(Guid publicId)
@@ -85,9 +86,12 @@ namespace BankApplication.App.Services.BankAccount
             list.AddRange(bankAccount.TransfersSent);
             list.AddRange(bankAccount.TransfersReceived);
 
-            return list;
+            return list.OrderByDescending(p => p.TransferDate).ToList();
         }
 
+        public List<Transfer> GetAll() => context.Transfers.AsNoTracking().OrderByDescending(p => p.TransferDate).ToList();
+
+           
         public List<Transfer> GetTransfersReceived(Guid publicId) 
         {
             var bankAccount = context.BankAccounts
@@ -97,7 +101,7 @@ namespace BankApplication.App.Services.BankAccount
             if (bankAccount == null)
                 throw new NotFoundException("Nie znaleziono konta bankowego");
 
-            return bankAccount.TransfersReceived;
+            return bankAccount.TransfersReceived.OrderByDescending(p => p.TransferDate).ToList();
         }
 
         public List<int> GetOwnTypes(int id)

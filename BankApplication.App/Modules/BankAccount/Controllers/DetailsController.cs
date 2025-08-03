@@ -12,6 +12,7 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
 {
     [Route("api/bank-accounts")]
     [ApiController]
+    [Authorize]
     public class DetailsController : ControllerBase
     {
         private readonly IDetailService service;
@@ -25,7 +26,7 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
         }
 
         [HttpGet()]
-        [Authorize]
+
         public ActionResult<bool> HasBankAccount()
         {
             var bankAccount = service.Fetch(User.Id());  

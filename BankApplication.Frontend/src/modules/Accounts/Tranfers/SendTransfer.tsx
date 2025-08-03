@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import type { Form } from "./TransferService";
 import TransferService from "./TransferService";
-import AlertModal from "../../../modals/AlertModal.tsx";
+import AllertModal from "../../../modals/AlertModal";
 import styles from "../../../styles/SendTransfer.module.css";
 
 interface SendTransferProps {
   publicId: string;
-  onTransferSent: () => Promise<void>;
+  onTransferSent?: () => void;
 }
 
 const SendTransfer: React.FC<SendTransferProps> = ({
@@ -41,11 +41,6 @@ const SendTransfer: React.FC<SendTransferProps> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.accountToNumber.trim()) {
-      showModal("Proszę podać numer konta odbiorcy.");
-      return;
-    }
-
     if (!/^\d{26}$/.test(formData.accountToNumber)) {
       showModal("Numer konta musi składać się z 26 cyfr.");
       return;
@@ -61,14 +56,9 @@ const SendTransfer: React.FC<SendTransferProps> = ({
 
     try {
       await TransferService.send(publicId, formData);
-      await onTransferSent();
-
-      setFormData({
-        accountToNumber: "",
-        amount: 0,
-        title: "",
-        description: "",
-      });
+      if (onTransferSent) {
+        onTransferSent();
+      }
     } catch (ex: any) {
       if (ex.status === 404) {
         showModal(ex.response.data);
@@ -83,7 +73,7 @@ const SendTransfer: React.FC<SendTransferProps> = ({
   return (
     <>
       <div className={styles.transferContainer}>
-        <h2 className={styles.title}>Wyślij nowy przelew</h2>
+        <h3 className={styles.title}>Nowy przelew</h3>
         <form onSubmit={handleSubmit} className={styles.transferForm}>
           <div className={styles.formGroup}>
             <label htmlFor="accountToNumber">Numer konta odbiorcy</label>
@@ -97,7 +87,6 @@ const SendTransfer: React.FC<SendTransferProps> = ({
               maxLength={26}
             />
           </div>
-
           <div className={styles.formGroup}>
             <label htmlFor="amount">Kwota</label>
             <input
@@ -111,7 +100,6 @@ const SendTransfer: React.FC<SendTransferProps> = ({
               min="0"
             />
           </div>
-
           <div className={styles.formGroup}>
             <label htmlFor="title">Tytuł przelewu</label>
             <input
@@ -123,7 +111,6 @@ const SendTransfer: React.FC<SendTransferProps> = ({
               placeholder="Np. Opłata za fakturę"
             />
           </div>
-
           <div className={styles.formGroup}>
             <label htmlFor="description">Opis (opcjonalnie)</label>
             <textarea
@@ -135,16 +122,14 @@ const SendTransfer: React.FC<SendTransferProps> = ({
               placeholder="Dodatkowe informacje dla odbiorcy"
             />
           </div>
-
           <button type="submit" className={styles.submitButton}>
             Wyślij przelew
           </button>
         </form>
       </div>
-
-      <AlertModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <AllertModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <p>{modalMessage}</p>
-      </AlertModal>
+      </AllertModal>
     </>
   );
 };

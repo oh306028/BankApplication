@@ -53,6 +53,9 @@ function Login() {
       }
       if (error.response.status === 404)
         setErrors({ ["NotFound"]: [error.response.data] });
+
+      if (error.response.status === 403)
+        setErrors({ ["NotFound"]: [error.response.data] });
     }
   };
 

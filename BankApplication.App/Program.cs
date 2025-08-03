@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using QuestPDF.Infrastructure;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -99,7 +100,7 @@ namespace BankApplication.App
                 };
             });
 
-
+            QuestPDF.Settings.License = LicenseType.Community;
             builder.Services.AddAuthorization();
 
             builder.Services.AddCors(options =>

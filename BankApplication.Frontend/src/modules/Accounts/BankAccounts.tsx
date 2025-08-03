@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AuthenticationService from "../Authentication/AuthenticationService";
 import ClientAccounts from "./ClientAccount/ClientAccounts";
+import AdminAccounts from "./AdminAccount/AdminAccounts";
 function BankAccounts() {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
@@ -13,9 +14,7 @@ function BankAccounts() {
     checkAdmin();
   }, []);
 
-  return (
-    <>{isAdmin ? <h1>Zalogowano administratora</h1> : <ClientAccounts />}</>
-  );
+  return <>{isAdmin ? <AdminAccounts /> : <ClientAccounts />}</>;
 }
 
 export default BankAccounts;
