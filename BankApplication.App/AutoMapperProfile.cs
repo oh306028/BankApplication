@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BankApplication.App.Modules.BankAccount.Models.Details;
 using BankApplication.App.Modules.BankAccount.Transfers.Models;
+using BankApplication.App.Modules.Client.Models.Details;
 using BankApplication.App.Resolvers;
 using BankApplication.Data.Entities;
 
@@ -22,8 +23,14 @@ namespace BankApplication.App
                 .ForMember(p => p.Sender, o => o.MapFrom<SenderResolver>())
                 .ForMember(p => p.Receiver, o => o.MapFrom<ReceiverResolver>())
                 .ForMember(p => p.ReceiverNumber, o => o.MapFrom<ReceiverNumberResolver>())     
-                .ForMember(p => p.SenderNumber, o => o.MapFrom<SenderNumberResolver>());        
+                .ForMember(p => p.SenderNumber, o => o.MapFrom<SenderNumberResolver>());
 
-        }
+            CreateMap<Logging, LogginDetails>() 
+                .ForMember(p => p.ClientName, o => o.MapFrom<ClientNameResolver>());
+
+            CreateMap<BankAccountBlockRequest, BlockRequestDetails>()
+                .ForMember(p => p.ClientName, o => o.MapFrom<ClientNameResolver>())
+                .ForMember(p => p.BankAccountNumber, o => o.MapFrom<AccountNumberResolver>());
+        }       
     }
 }

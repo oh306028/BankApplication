@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BankApplication.App.Exceptions;
+using BankApplication.App.Modules.BankAccount.Models.Details;
 using BankApplication.Data;
 using BankApplication.Data.Entities;
 using BankApplication.Data.Enums;
@@ -16,6 +17,11 @@ namespace BankApplication.App.Services.BankAccount
         public List<Transfer> GetTransfersReceived(Guid publicId);
         List<Transfer> GetList(Guid publicId);
         List<Transfer> GetAll();
+
+        List<Data.Entities.BankAccount> GetAllAccounts();
+        bool HasActiveBlockRequests(int id);
+
+
     }
 
     public class DetailService : IDetailService
@@ -115,6 +121,22 @@ namespace BankApplication.App.Services.BankAccount
             account.Client.BankAccounts.ForEach(p => list.Add(p.Type));
 
             return list;
+        }
+
+        public List<Data.Entities.BankAccount> GetAllAccounts()
+        {
+            return context.BankAccounts.ToList();
+        }
+
+        public bool HasActiveBlockRequests(int id)
+        {
+            var account = context.Accounts
+                .Include(p => p.Client)
+                .ThenInclude(p => p.BankAccounts)
+                .ThenInclude(p => p.BlockadeRequest)
+                .FirstOrDefault(i => i.Id == id);
+
+            return account.Client.BankAccounts.Any(p => p.BlockadeRequest.IsActive);
         }
     }
 }

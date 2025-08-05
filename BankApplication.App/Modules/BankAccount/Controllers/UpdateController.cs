@@ -25,5 +25,12 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
             return Ok();
         }
 
+        [HttpPost("{accountId}/block-request")]
+        public ActionResult SendBlockRequest(Guid accountId)
+        {   
+            service.SendBlockRequest(accountId); 
+            return Ok();
+        }
+
     }
 }

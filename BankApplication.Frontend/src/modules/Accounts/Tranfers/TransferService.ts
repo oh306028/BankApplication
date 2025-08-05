@@ -10,7 +10,8 @@ export default class TransferService {
   }
 
   public static async getAll(): Promise<Details[]> {
-    return (await axios.get<Details[]>(`bank-accounts/null/transfers`)).data;
+    return (await axios.get<Details[]>(`bank-accounts/dictionary/transfers`))
+      .data;
   }
 
   public static async getSentTransfers(accountId: string): Promise<Details[]> {

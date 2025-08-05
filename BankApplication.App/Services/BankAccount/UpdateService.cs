@@ -16,6 +16,7 @@ namespace BankApplication.App.Services.BankAccount
     {
         void Create(int userId, CreateBankAccountModel model);
         void SendTransfer(Guid accountId, SendTransferModel model);
+        void SendBlockRequest(Guid accountId);  
     }
 
     public class UpdateService : IUpdateService
@@ -113,6 +114,25 @@ namespace BankApplication.App.Services.BankAccount
                 context.SaveChanges();      
                 transaction.Rollback();               
             }
+
+        }
+
+        public void SendBlockRequest(Guid accountId)
+        {
+            var account = context.BankAccounts
+                .AsNoTracking()
+                .Single(p => p.PublicId == accountId);
+
+            var request = new BankAccountBlockRequest()
+            {
+                BankAccountId = account.Id,
+                RequestDate = DateTime.Now,
+                IsAccepted = false,
+                IsActive = true
+            };
+
+            context.BankAccountBlockRequests.Add(request);
+            context.SaveChanges();
 
         }
 

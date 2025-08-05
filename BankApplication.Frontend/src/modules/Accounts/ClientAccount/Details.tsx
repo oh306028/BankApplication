@@ -25,6 +25,8 @@ function Details() {
   const [historyFilter, setHistoryFilter] = useState<HistoryFilter>("all");
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [transferListVersion, setTransferListVersion] = useState(0);
+  const [hasActiveBlockRequests, setHasActiveBlockRequests] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const getInitialData = async () => {
@@ -37,21 +39,22 @@ function Details() {
     getInitialData();
   }, []);
 
+  const fetchDetails = async () => {
+    if (!selectedAccountType) return;
+    try {
+      const result = await AccountsService.getDetailsByType(
+        selectedAccountType
+      );
+      setDetails(result);
+      setIsTransferActive(false);
+      setShowHistory(false);
+      setHistoryFilter("all");
+      hasBlockRequests();
+    } catch (error) {
+      setDetails(null);
+    }
+  };
   useEffect(() => {
-    const fetchDetails = async () => {
-      if (!selectedAccountType) return;
-      try {
-        const result = await AccountsService.getDetailsByType(
-          selectedAccountType
-        );
-        setDetails(result);
-        setIsTransferActive(false);
-        setShowHistory(false);
-        setHistoryFilter("all");
-      } catch (error) {
-        setDetails(null);
-      }
-    };
     fetchDetails();
   }, [selectedAccountType]);
 
@@ -83,27 +86,64 @@ function Details() {
     }
   };
 
+  const hasBlockRequests = async () => {
+    const result = await AccountsService.hasBLockRequests();
+    setHasActiveBlockRequests(result);
+  };
+
   const handleDownloadDetails = async () => {};
+
+  const handleBlockRequest = async () => {
+    if (hasActiveBlockRequests) {
+      showModal("Wysłano już wniosek. Oczekiwanie na akceptację.");
+      return;
+    }
+
+    if (!details) {
+      showModal("Nie można przesłać wniosku o blokadę, brak danych konta.");
+      return;
+    }
+    try {
+      await AccountsService.sendBlockRequest(details.publicId);
+      fetchDetails();
+      showModal("Wysłano wniosek o blokadę konta do administratora.");
+    } catch (error) {
+      showModal("Błąd podczas wysyłania wniosku.");
+    }
+  };
 
   return (
     <>
       <ClientNavBar />
       <div className={styles.detailsPage}>
-        <div className={styles.accountsPanel}>
-          <h2 className={styles.panelTitle}>Twoje konta</h2>
-          <ul className={styles.accountsList}>
-            {ownTypes.map((p) => (
-              <li
-                onClick={() => setSelectedAccountType(p.value)}
-                key={p.key}
-                className={
-                  selectedAccountType === p.value ? styles.activeAccount : ""
-                }
-              >
-                {p.name}
-              </li>
-            ))}
-          </ul>
+        <div className={styles.container}>
+          <div className={styles.accountsPanel}>
+            <h2 className={styles.panelTitle}>Twoje konta</h2>
+            <ul className={styles.accountsList}>
+              {ownTypes.map((p) => (
+                <li
+                  onClick={() => setSelectedAccountType(p.value)}
+                  key={p.key}
+                  className={
+                    selectedAccountType === p.value ? styles.activeAccount : ""
+                  }
+                >
+                  {p.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button className={styles.actionButton}>Dodaj nowe konto</button>
+          <button
+            className={
+              hasActiveBlockRequests
+                ? styles.disabledActionButton
+                : styles.actionButton
+            }
+            onClick={handleBlockRequest}
+          >
+            Wniosek o blokadę konta
+          </button>
         </div>
 
         <div className={styles.mainContent}>

@@ -23,6 +23,7 @@ namespace BankApplication.Data
         public DbSet<Blockade> Blockades { get; set; }
         public DbSet<Logging> Loggings { get; set; }
         public DbSet<Transfer> Transfers { get; set; }
+        public DbSet<BankAccountBlockRequest> BankAccountBlockRequests { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

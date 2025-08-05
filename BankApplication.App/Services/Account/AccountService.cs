@@ -20,6 +20,8 @@ namespace BankApplication.App.Services.Account
         Task<string> Login(LoginModel model);
         void Register(RegisterModel model);
         bool IsAdmin(int userId);
+
+        List<ClientDetails> GetAdmins();
     }
 
     public class AccountService : IAccountService
@@ -176,6 +178,17 @@ namespace BankApplication.App.Services.Account
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-      
+
+        public List<ClientDetails> GetAdmins()
+        {
+
+            var clients = context.Clients
+                .Include(p => p.Account)
+                .Where(p => p.Account.IsEmployee == true && p.IsActive == true)
+                .AsNoTracking().ToList();
+            var result = mapper.Map<List<ClientDetails>>(clients);
+
+            return result;
+        }
     }
 }

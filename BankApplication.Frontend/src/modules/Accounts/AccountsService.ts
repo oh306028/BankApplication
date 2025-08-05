@@ -28,13 +28,59 @@ export default class AccountsService {
     return (await axios.get<KeyValuePair[]>(`bank-accounts/credits`)).data;
   }
 
+  public static async hasBLockRequests(): Promise<boolean> {
+    return (await axios.get<boolean>(`bank-accounts/has-active-block-request`))
+      .data;
+  }
   public static async createBankAccount(model: Form): Promise<void> {
     await axios.post<KeyValuePair[]>(`bank-accounts`, model);
   }
 
-  public static async getClientList(): Promise<ClientDetails[]> {
-    return (await axios.get<ClientDetails[]>(`clients`)).data;
+  public static async sendBlockRequest(accountId: string): Promise<void> {
+    await axios.post(`bank-accounts/${accountId}/block-request`);
   }
+
+  public static async getClientList(): Promise<ClientDetails[]> {
+    return (await axios.get<ClientDetails[]>(`clients/dictionary/list`)).data;
+  }
+
+  public static async getAdminList(): Promise<ClientDetails[]> {
+    return (await axios.get<ClientDetails[]>(`accounts/dictionary/admins`))
+      .data;
+  }
+
+  public static async getBankAccounts(): Promise<Details[]> {
+    return (await axios.get<Details[]>(`bank-accounts/dictionary/list`)).data;
+  }
+  public static async getBlockRequests(): Promise<BlockRequestDetails[]> {
+    return (
+      await axios.get<BlockRequestDetails[]>(
+        `clients/dictionary/block-requests`
+      )
+    ).data;
+  }
+
+  public static async getLoginAttempts(): Promise<LoginAttemptDetails[]> {
+    return (
+      await axios.get<LoginAttemptDetails[]>(
+        `clients/dictionary/login-attempts`
+      )
+    ).data;
+  }
+}
+
+export interface BlockRequestDetails {
+  requestDate: string;
+  managedDate: string;
+  isAccepted?: boolean;
+  isActive?: boolean;
+  clientName: string;
+}
+
+export interface LoginAttemptDetails {
+  logInDate: string;
+  isSuccess: boolean;
+  clientName: string;
 }
 
 export interface KeyValuePair {

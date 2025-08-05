@@ -2,6 +2,7 @@
 using BankApplication.App.Exceptions;
 using BankApplication.App.Modules.Client.Models.Details;
 using BankApplication.Data;
+using BankApplication.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankApplication.App.Services.Client
@@ -12,6 +13,9 @@ namespace BankApplication.App.Services.Client
         ClientDetails Fetch(int id);
 
         List<ClientDetails> List();
+        List<LogginDetails> LoginAttempts();
+
+        List<BlockRequestDetails> BlockRequests();  
     }
 
     public class DetailService : IDetailService
@@ -25,6 +29,16 @@ namespace BankApplication.App.Services.Client
             this.context = context;
             this.authenticationOptions = authenticationOptions;
             this.mapper = mapper;
+        }
+
+        public List<BlockRequestDetails> BlockRequests()
+        {
+            var blockades = context.BankAccountBlockRequests
+                .Include(p => p.BankAccount).ThenInclude(p => p.Client)
+                .ToList();
+
+            return mapper.Map<List<BlockRequestDetails>>(blockades);
+
         }
 
         public ClientDetails Fetch(Guid id)
@@ -58,6 +72,12 @@ namespace BankApplication.App.Services.Client
             var result = mapper.Map<List<ClientDetails>>(clients);
 
             return result;
+        }
+
+        public List<LogginDetails> LoginAttempts()  
+        {
+            var loggins = context.Loggings.Include(p => p.Account).ThenInclude(p => p.Client).ToList();
+            return mapper.Map<List<LogginDetails>>(loggins);
         }
     }
 }

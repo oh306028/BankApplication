@@ -24,13 +24,5 @@ namespace BankApplication.App.Modules.Client.Controllers
             return Ok(client);
         }
 
-        [HttpGet]
-        [Authorize]
-        public ActionResult<List<ClientDetails>> GetList()
-        {
-            var clients = service.List();
-            return Ok(clients);
-        }
-
     }
 }

@@ -113,6 +113,23 @@
   background-color: #003366;
 }
 
+.disabledActionButton {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #004d99;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.disabledActionButton:hover {
+  background-color: #8b8b8b;
+  cursor: not-allowed;
+}
+
 .historySection {
   margin-top: 30px;
   padding: 20px;

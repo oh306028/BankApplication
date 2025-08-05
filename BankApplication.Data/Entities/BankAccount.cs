@@ -23,6 +23,7 @@ namespace BankApplication.Data.Entities
         public int Type { get; set; }
         public decimal? InteresetRate { get; set; }
 
+        public virtual BankAccountBlockRequest BlockadeRequest { get; set; }
 
         public BankAccountType DisplayType => (BankAccountType)Type;
 

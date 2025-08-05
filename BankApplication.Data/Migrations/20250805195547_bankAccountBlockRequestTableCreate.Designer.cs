@@ -4,6 +4,7 @@ using BankApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankApplication.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250805195547_bankAccountBlockRequestTableCreate")]
+    partial class bankAccountBlockRequestTableCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace BankApplication.Data.Migrations
                             IsEmployee = true,
                             Login = "adminTab",
                             PasswordHash = "AQAAAAIAAYagAAAAELBQ1+PDtUJPc31emYY8MdjP9zirLtLeWppq20jtNO5ZgkKvg0sCJ5elSbDPJULweA==",
-                            PublicId = new Guid("b6c4897f-95ac-404a-8b40-691a20cb0690"),
+                            PublicId = new Guid("7eb06bc9-6296-4513-9c66-1cbfd1c1a2e7"),
                             WrongLoginAmount = 0
                         });
                 });
@@ -170,9 +172,6 @@ namespace BankApplication.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool?>("IsAccepted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("ManagedDate")
@@ -357,7 +356,7 @@ namespace BankApplication.Data.Migrations
                             PESEL = "",
                             Phone = "",
                             PostalCode = "",
-                            PublicId = new Guid("c4676ab7-f087-494c-8dc7-61a11816f631")
+                            PublicId = new Guid("82852a3f-45c6-4174-afae-c55a63c73c91")
                         });
                 });
 
