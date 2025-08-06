@@ -25,7 +25,7 @@ function AdminAccounts() {
     { key: "admins", label: "Administratorzy" },
     { key: "clients", label: "Klienci banku" },
     { key: "accounts", label: "Konta klientów" },
-    { key: "blockRequests", label: "Prośby o zablokowanie konta" },
+    { key: "blockRequests", label: "Wnioski o zablokowanie konta" },
     { key: "transfers", label: "Transfery" },
     { key: "logins", label: "Logowania" },
     { key: "applications", label: "Wnioski o zostanie klientem" },

@@ -4,6 +4,7 @@ using BankApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankApplication.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250806102956_RefactorBlockadeToBeOneToManyRelation")]
+    partial class RefactorBlockadeToBeOneToManyRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace BankApplication.Data.Migrations
                             IsEmployee = true,
                             Login = "adminTab",
                             PasswordHash = "AQAAAAIAAYagAAAAELBQ1+PDtUJPc31emYY8MdjP9zirLtLeWppq20jtNO5ZgkKvg0sCJ5elSbDPJULweA==",
-                            PublicId = new Guid("b25cff5c-ef49-4f32-b51d-af69fbe5782f"),
+                            PublicId = new Guid("b6d8ad62-04e8-4998-beb0-68eb1576efb6"),
                             WrongLoginAmount = 0
                         });
                 });
@@ -177,9 +179,6 @@ namespace BankApplication.Data.Migrations
 
                     b.Property<DateTime?>("ManagedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("PublicId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("datetime2");
@@ -359,7 +358,7 @@ namespace BankApplication.Data.Migrations
                             PESEL = "",
                             Phone = "",
                             PostalCode = "",
-                            PublicId = new Guid("1a623678-2a99-44ce-8648-50953e247a62")
+                            PublicId = new Guid("78924c44-1bb3-4f6d-aa11-b9f99740a942")
                         });
                 });
 

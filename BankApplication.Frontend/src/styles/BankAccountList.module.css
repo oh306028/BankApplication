@@ -1,0 +1,91 @@
+.listContainer {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #004d99;
+  margin-top: 0;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e6f0ff;
+  padding-bottom: 10px;
+}
+
+.tableWrapper {
+  max-height: 65vh;
+  overflow-y: auto;
+  border: 1px solid #e6f0ff;
+  border-radius: 8px;
+}
+
+.accountsTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.accountsTable th,
+.accountsTable td {
+  padding: 15px;
+  vertical-align: middle;
+  border-bottom: 1px solid #e6f0ff;
+}
+
+.accountsTable th {
+  background-color: #f2f8ff;
+  color: #003366;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.accountsTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.accountsTable tbody tr:hover {
+  background-color: #f8fbff;
+}
+
+.accountNumberCell {
+  font-family: monospace;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+}
+
+.balanceCell {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #004d99;
+}
+
+.currency {
+  font-weight: normal;
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: 5px;
+}
+
+.publicIdCell {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.emptyValue {
+  color: #999;
+  font-style: italic;
+}
+
+.placeholder {
+  color: #6c757d;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 50px;
+  font-style: italic;
+}

@@ -41,27 +41,49 @@ function Details() {
     getInitialData();
   }, []);
 
-  const fetchDetails = async () => {
+  useEffect(() => {
+    const fetchDetails = async () => {
+      if (!selectedAccountType) return;
+      try {
+        const result = await AccountsService.getDetailsByType(
+          selectedAccountType
+        );
+        setDetails(result);
+        setIsTransferActive(false);
+        setShowHistory(false);
+        setHistoryFilter("all");
+      } catch (error) {
+        setDetails(null);
+      }
+    };
+    fetchDetails();
+  }, [selectedAccountType]);
+
+  useEffect(() => {
+    const checkBlockRequests = async () => {
+      if (details?.publicId) {
+        const result = await AccountsService.hasBLockRequests(details.publicId);
+        setHasActiveBlockRequests(result);
+      }
+    };
+    checkBlockRequests();
+  }, [details]);
+
+  const refreshPageData = async () => {
     if (!selectedAccountType) return;
     try {
+      const types = await AccountsService.getOwnTypes();
+      setOwnTypes(types);
+
       const result = await AccountsService.getDetailsByType(
         selectedAccountType
       );
       setDetails(result);
-      setIsTransferActive(false);
-      setShowHistory(false);
-      setHistoryFilter("all");
-      hasBlockRequests();
       setShowPicker(false);
-      const types = await AccountsService.getOwnTypes();
-      setOwnTypes(types);
     } catch (error) {
-      setDetails(null);
+      console.error("Błąd podczas odświeżania danych:", error);
     }
   };
-  useEffect(() => {
-    fetchDetails();
-  }, [selectedAccountType]);
 
   const toggleTransfer = () => setIsTransferActive(!isTransferActive);
   const showModal = (message: string) => {
@@ -83,17 +105,11 @@ function Details() {
       showModal("Nie można pobrać historii, brak danych konta.");
       return;
     }
-
     try {
       await TransferService.downloadTransfersPdf(details.publicId);
     } catch (error) {
       showModal("Błąd podczas pobierania historii przelewów.");
     }
-  };
-
-  const hasBlockRequests = async () => {
-    const result = await AccountsService.hasBLockRequests();
-    setHasActiveBlockRequests(result);
   };
 
   const handleDownloadDetails = async () => {};
@@ -117,7 +133,7 @@ function Details() {
     }
     try {
       await AccountsService.sendBlockRequest(details.publicId);
-      fetchDetails();
+      setHasActiveBlockRequests(true);
       showModal("Wysłano wniosek o blokadę konta do administratora.");
     } catch (error) {
       showModal("Błąd podczas wysyłania wniosku.");
@@ -130,13 +146,12 @@ function Details() {
         <Picker
           onCancelPicking={() => setShowPicker(false)}
           hasAccount={true}
-          onAccountCreated={async () => fetchDetails()}
+          onAccountCreated={refreshPageData}
           ownTypes={ownTypes}
         />
       )}
       {!showPicker && (
         <>
-          {" "}
           <ClientNavBar />
           <div className={styles.detailsPage}>
             <div className={styles.container}>

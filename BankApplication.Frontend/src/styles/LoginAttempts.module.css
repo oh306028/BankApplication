@@ -1,0 +1,75 @@
+.listContainer {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #004d99;
+  margin-top: 0;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e6f0ff;
+  padding-bottom: 10px;
+}
+
+.scrollWrapper {
+  max-height: 65vh;
+  overflow-y: auto;
+  border: 1px solid #e6f0ff;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #f8fbff;
+}
+
+.logList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.logItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 15px;
+  border-bottom: 1px solid #e6f0ff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.logItem:last-child {
+  border-bottom: none;
+}
+
+.statusIcon {
+  font-size: 1.2rem;
+  font-weight: bold;
+  min-width: 25px;
+  text-align: center;
+}
+
+.success {
+  color: #28a745;
+}
+
+.failure {
+  color: #dc3545;
+}
+
+.clientName {
+  flex-grow: 1;
+  font-weight: 500;
+  color: #333;
+}
+
+.logDate {
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.placeholder {
+  color: #6c757d;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 50px;
+  font-style: italic;
+}

@@ -32,5 +32,12 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
             return Ok();
         }
 
+        [HttpPost("{accountId}/manage-block-request")]
+        public ActionResult ManageRequest(Guid accountId, BlockRequestModel model)   
+        {
+            service.ManageBlockRequest(accountId, model, User.Id());  
+            return Ok();
+        }
+
     }
 }

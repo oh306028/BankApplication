@@ -1,0 +1,78 @@
+.listContainer {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #004d99;
+  margin-top: 0;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e6f0ff;
+  padding-bottom: 10px;
+}
+
+.tableWrapper {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid #e6f0ff;
+  border-radius: 8px;
+}
+
+.adminsTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 1200px;
+}
+
+.adminsTable th,
+.adminsTable td {
+  padding: 12px 15px;
+  vertical-align: middle;
+  border-bottom: 1px solid #e6f0ff;
+  white-space: nowrap;
+}
+
+.adminsTable th {
+  background-color: #f2f8ff;
+  color: #003366;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 2px solid #ddeaff;
+}
+
+.adminsTable tbody tr:hover {
+  background-color: #f8fbff;
+}
+
+.adminsTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.peselCell {
+  font-family: monospace;
+}
+
+.emailCell {
+  color: #004d99;
+  font-weight: 500;
+}
+
+.emptyValue {
+  color: #999;
+  font-style: italic;
+}
+
+.placeholder {
+  color: #6c757d;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 50px;
+  font-style: italic;
+}

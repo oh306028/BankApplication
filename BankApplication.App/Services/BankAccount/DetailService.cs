@@ -19,7 +19,7 @@ namespace BankApplication.App.Services.BankAccount
         List<Transfer> GetAll();
 
         List<Data.Entities.BankAccount> GetAllAccounts();
-        bool HasActiveBlockRequests(int id);
+        bool HasActiveBlockRequests(Guid accountId);
 
 
     }
@@ -128,15 +128,13 @@ namespace BankApplication.App.Services.BankAccount
             return context.BankAccounts.ToList();
         }
 
-        public bool HasActiveBlockRequests(int id)
+        public bool HasActiveBlockRequests(Guid accountId)
         {
-            var account = context.Accounts
-                .Include(p => p.Client)
-                .ThenInclude(p => p.BankAccounts)
-                .ThenInclude(p => p.BlockadeRequest)
-                .FirstOrDefault(i => i.Id == id);
+            var account = context.BankAccounts
+                .Include(p => p.BlockadeRequests)
+                .FirstOrDefault(i => i.PublicId == accountId);  
 
-            return account.Client.BankAccounts.Any(p => p.BlockadeRequest.IsActive);
+            return account.BlockadeRequests.Any(p => p.IsActive);
         }
     }
 }

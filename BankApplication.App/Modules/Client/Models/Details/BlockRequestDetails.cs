@@ -7,6 +7,8 @@
         public bool? IsAccepted { get; set; }
         public bool IsActive { get; set; }
         public string ClientName { get; set; }
-        public string BankAccountNumber { get; set; }       
+        public string BankAccountNumber { get; set; }
+        public string PublicId { get; set; }
+        public string AccountId { get; set; }   
     }
 }

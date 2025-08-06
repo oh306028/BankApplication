@@ -10,7 +10,9 @@ namespace BankApplication.Data.Entities
 {
     public class BankAccountBlockRequest    
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
+        public Guid PublicId { get; set; } = Guid.NewGuid();
+
         public int BankAccountId { get; set; }  
         public virtual BankAccount BankAccount { get; set; }
         public DateTime RequestDate { get; set; }
@@ -19,7 +21,8 @@ namespace BankApplication.Data.Entities
 
         public int? AdminId { get; set; }    
         public Client Admin { get; set; }
-        public bool IsActive { get; set; }      
+        public bool IsActive { get; set; }
+
     }
 
     public class BankAccountBlockRequestConfiguration : IEntityTypeConfiguration<BankAccountBlockRequest>
@@ -36,7 +39,7 @@ namespace BankApplication.Data.Entities
             builder.Property(a => a.AdminId).IsRequired(false);
             builder.Property(a => a.RequestDate).IsRequired();
 
-            builder.HasOne(p => p.BankAccount).WithOne(p => p.BlockadeRequest)
+            builder.HasOne(p => p.BankAccount).WithMany(p => p.BlockadeRequests)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(p => p.Admin).WithOne(p => p.BlockRequest)

@@ -21,12 +21,10 @@ namespace BankApplication.Data.Entities
         public string Currency { get; set; }
         public decimal Balance { get; set; }    
         public int Type { get; set; }
-        public decimal? InteresetRate { get; set; }
-
-        public virtual BankAccountBlockRequest BlockadeRequest { get; set; }
-
+        public decimal? InteresetRate { get; set; } 
         public BankAccountType DisplayType => (BankAccountType)Type;
 
+        public virtual List<BankAccountBlockRequest> BlockadeRequests { get; set; }
         public virtual List<BankStatement> BankStatements { get; set; } = new List<BankStatement>();
         public virtual List<Transfer> TransfersSent { get; set; } = new List<Transfer>();
         public virtual List<Transfer> TransfersReceived { get; set; } = new List<Transfer>();

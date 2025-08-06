@@ -1,0 +1,114 @@
+.listContainer {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #004d99;
+  margin-top: 0;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e6f0ff;
+  padding-bottom: 10px;
+}
+
+.scrollWrapper {
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.transferList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.transferItem {
+  background-color: #f8fbff;
+  border: 1px solid #e6f0ff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e6f0ff;
+  padding-bottom: 10px;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.amount {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #003366;
+}
+
+.mainInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.transferTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #004d99;
+  margin: 0;
+}
+
+.partiesContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.partyBlock {
+  flex: 1;
+}
+
+.partyLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: #777;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.partyName {
+  font-weight: 500;
+  margin: 0;
+}
+
+.partyNumber {
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+}
+
+.arrowIcon {
+  font-size: 2rem;
+  color: #cce0ff;
+}
+
+.placeholder {
+  color: #6c757d;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 50px;
+  font-style: italic;
+}

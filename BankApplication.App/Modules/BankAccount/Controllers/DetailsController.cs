@@ -105,10 +105,10 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
 
         }
 
-        [HttpGet("has-active-block-request")]
-        public ActionResult<bool> HasBlockRequests()     
+        [HttpGet("{accountId}/has-active-block-request")]
+        public ActionResult<bool> HasBlockRequests(Guid accountId)     
         {
-            var hasAciveBlockRequest = service.HasActiveBlockRequests(User.Id());
+            var hasAciveBlockRequest = service.HasActiveBlockRequests(accountId);
             return Ok(hasAciveBlockRequest);
 
         }

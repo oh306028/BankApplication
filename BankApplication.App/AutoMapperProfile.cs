@@ -30,7 +30,8 @@ namespace BankApplication.App
 
             CreateMap<BankAccountBlockRequest, BlockRequestDetails>()
                 .ForMember(p => p.ClientName, o => o.MapFrom<ClientNameResolver>())
-                .ForMember(p => p.BankAccountNumber, o => o.MapFrom<AccountNumberResolver>());
+                .ForMember(p => p.BankAccountNumber, o => o.MapFrom<AccountNumberResolver>())
+                .ForMember(p => p.AccountId, o => o.MapFrom<AccountIdResolver>());
         }       
     }
 }

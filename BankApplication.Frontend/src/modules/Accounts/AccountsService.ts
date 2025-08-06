@@ -8,6 +8,16 @@ export default class AccountsService {
     return (await axios.get<KeyValuePair[]>(`bank-accounts/types`)).data;
   }
 
+  public static async manageBlockRequest(
+    model: BlockRequestModel,
+    accountId: string
+  ): Promise<void> {
+    await axios.post<BlockRequestModel>(
+      `bank-accounts/${accountId}/manage-block-request`,
+      model
+    );
+  }
+
   public static async getOwnTypes(): Promise<KeyValuePair[]> {
     return (await axios.get<KeyValuePair[]>(`bank-accounts/own-types`)).data;
   }
@@ -28,9 +38,12 @@ export default class AccountsService {
     return (await axios.get<KeyValuePair[]>(`bank-accounts/credits`)).data;
   }
 
-  public static async hasBLockRequests(): Promise<boolean> {
-    return (await axios.get<boolean>(`bank-accounts/has-active-block-request`))
-      .data;
+  public static async hasBLockRequests(accountId: string): Promise<boolean> {
+    return (
+      await axios.get<boolean>(
+        `bank-accounts/${accountId}/has-active-block-request`
+      )
+    ).data;
   }
   public static async createBankAccount(model: Form): Promise<void> {
     await axios.post<KeyValuePair[]>(`bank-accounts`, model);
@@ -75,6 +88,14 @@ export interface BlockRequestDetails {
   isAccepted?: boolean;
   isActive?: boolean;
   clientName: string;
+  bankAccountNumber: string;
+  publicId: string;
+  accountId: string;
+}
+
+export interface BlockRequestModel {
+  publicId: string;
+  accepted: boolean;
 }
 
 export interface LoginAttemptDetails {
