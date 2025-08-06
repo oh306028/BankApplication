@@ -8,8 +8,14 @@ import Modal from "../../../modals/AlertModal.tsx";
 
 function Picker({
   onAccountCreated,
+  onCancelPicking,
+  hasAccount,
+  ownTypes,
 }: {
   onAccountCreated: () => Promise<void>;
+  onCancelPicking?: () => void;
+  hasAccount?: boolean;
+  ownTypes?: KeyValuePair[];
 }) {
   const model: Form = {
     type: "",
@@ -44,6 +50,14 @@ function Picker({
     onCreated();
   }, []);
 
+  const userHasAccountType = (accountType: string): boolean => {
+    const hasAccount =
+      ownTypes?.some((ownType) => {
+        return ownType.value === accountType;
+      }) || false;
+    return hasAccount;
+  };
+
   const resetSelections = () => {
     setSelectedInterestRate(null);
     setSelectedCurrency(null);
@@ -55,6 +69,10 @@ function Picker({
     setter: React.Dispatch<React.SetStateAction<any>>,
     value: any
   ) => {
+    if (userHasAccountType(tileType)) {
+      return;
+    }
+
     if (tileType !== activeTile) {
       resetSelections();
       setActiveTile(tileType);
@@ -65,6 +83,10 @@ function Picker({
   };
 
   const handleSelectAccount = async (accountType: string) => {
+    if (userHasAccountType(accountType)) {
+      return;
+    }
+
     if (accountType === "Saving") {
       if (!selectedCurrency || !selectedInterestRate) {
         showModal(
@@ -110,117 +132,139 @@ function Picker({
     setCreditAmounts(creditAmounts);
   };
 
+  function handleCancel(): void {
+    if (onCancelPicking) {
+      onCancelPicking();
+    }
+  }
+
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.container}>
-        <h2 className={styles.title}>Utwórz swój pierwszy rachunek bankowy!</h2>
+        <h2 className={styles.title}>
+          {hasAccount
+            ? "Dodaj nowy rachunek"
+            : "Utwórz swój pierwszy rachunek bankowy!"}
+        </h2>
         <div className={styles.decorativeLine}></div>
 
         <div className={styles.tileRow}>
-          {bankAccountTypes.map((type) => (
-            <div
-              key={type.key}
-              className={`${styles.tile} ${
-                activeTile === type.value ? styles.activeTile : ""
-              }`}
-            >
-              <h3 className={styles.tileTitle}>{type.name}</h3>
+          {bankAccountTypes.map((type) => {
+            const isOwned = userHasAccountType(type.value);
+            return (
+              <div
+                key={type.key}
+                className={`${styles.tile} ${
+                  activeTile === type.value ? styles.activeTile : ""
+                } ${isOwned ? styles.disabledTile : ""}`}
+              >
+                <h3 className={styles.tileTitle}>
+                  {type.name}
+                  {isOwned && (
+                    <span className={styles.ownedLabel}> (Posiadasz)</span>
+                  )}
+                </h3>
+                <div className={styles.details}>
+                  {type.value === "Saving" && (
+                    <>
+                      <p className={styles.subtitle}>Wybierz oprocentowanie</p>
+                      <ul className={styles.list}>
+                        {interestRates.map((rate) => (
+                          <li
+                            key={rate.key}
+                            onClick={() =>
+                              handleOptionSelection(
+                                type.value,
+                                setSelectedInterestRate,
+                                rate.key
+                              )
+                            }
+                            className={`${styles.listItem} ${
+                              activeTile === type.value &&
+                              selectedInterestRate === rate.key
+                                ? styles.selected
+                                : ""
+                            } ${isOwned ? styles.disabledListItem : ""}`}
+                          >
+                            {rate.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
 
-              <div className={styles.details}>
-                {type.value === "Saving" && (
-                  <>
-                    <p className={styles.subtitle}>Wybierz oprocentowanie</p>
-                    <ul className={styles.list}>
-                      {interestRates.map((rate) => (
-                        <li
-                          key={rate.key}
-                          onClick={() =>
-                            handleOptionSelection(
-                              type.value,
-                              setSelectedInterestRate,
-                              rate.key
-                            )
-                          }
-                          className={`${styles.listItem} ${
-                            activeTile === type.value &&
-                            selectedInterestRate === rate.key
-                              ? styles.selected
-                              : ""
-                          }`}
-                        >
-                          {rate.name}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+                  {(type.value === "Saving" || type.value === "Credit") && (
+                    <>
+                      <p className={styles.subtitle}>Wybierz walutę</p>
+                      <ul className={styles.list}>
+                        {currencies.map((currency) => (
+                          <li
+                            key={currency.key}
+                            onClick={() =>
+                              handleOptionSelection(
+                                type.value,
+                                setSelectedCurrency,
+                                currency.name
+                              )
+                            }
+                            className={`${styles.listItem} ${
+                              activeTile === type.value &&
+                              selectedCurrency === currency.name
+                                ? styles.selected
+                                : ""
+                            } ${isOwned ? styles.disabledListItem : ""}`}
+                          >
+                            {currency.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
 
-                {(type.value === "Saving" || type.value === "Credit") && (
-                  <>
-                    <p className={styles.subtitle}>Wybierz walutę</p>
-                    <ul className={styles.list}>
-                      {currencies.map((currency) => (
-                        <li
-                          key={currency.key}
-                          onClick={() =>
-                            handleOptionSelection(
-                              type.value,
-                              setSelectedCurrency,
-                              currency.name
-                            )
-                          }
-                          className={`${styles.listItem} ${
-                            activeTile === type.value &&
-                            selectedCurrency === currency.name
-                              ? styles.selected
-                              : ""
-                          }`}
-                        >
-                          {currency.name}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
+                  {type.value === "Credit" && (
+                    <>
+                      <p className={styles.subtitle}>Wybierz kwotę</p>
+                      <ul className={styles.list}>
+                        {creditAmounts.map((credit) => (
+                          <li
+                            key={credit.key}
+                            onClick={() =>
+                              handleOptionSelection(
+                                type.value,
+                                setSelectedCredit,
+                                credit.key
+                              )
+                            }
+                            className={`${styles.listItem} ${
+                              activeTile === type.value &&
+                              selectedCredit === credit.key
+                                ? styles.selected
+                                : ""
+                            } ${isOwned ? styles.disabledListItem : ""}`}
+                          >
+                            {credit.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
 
-                {type.value === "Credit" && (
-                  <>
-                    <p className={styles.subtitle}>Wybierz kwotę</p>
-                    <ul className={styles.list}>
-                      {creditAmounts.map((credit) => (
-                        <li
-                          key={credit.key}
-                          onClick={() =>
-                            handleOptionSelection(
-                              type.value,
-                              setSelectedCredit,
-                              credit.key
-                            )
-                          }
-                          className={`${styles.listItem} ${
-                            activeTile === type.value &&
-                            selectedCredit === credit.key
-                              ? styles.selected
-                              : ""
-                          }`}
-                        >
-                          {credit.name}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-
-                <button
-                  onClick={() => handleSelectAccount(type.value)}
-                  className={styles.submitButton}
-                >
-                  Wybierz
-                </button>
+                  {!isOwned && (
+                    <button
+                      onClick={() => handleSelectAccount(type.value)}
+                      className={styles.submitButton}
+                    >
+                      Wybierz
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+        <button onClick={() => handleCancel()} className={styles.cancelButton}>
+          Anuluj
+        </button>
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

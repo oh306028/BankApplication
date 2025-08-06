@@ -40,11 +40,18 @@ namespace BankApplication.App.Services.BankAccount
 
             var bankAccount = new BankApplication.Data.Entities.BankAccount();
             bankAccount.Type = (int)model.Type;
-           
-            if(!string.IsNullOrEmpty(model.Currency))
-                bankAccount.Currency = model.Currency;
 
-            if(model.InterestRate.HasValue)
+            if (!string.IsNullOrEmpty(model.Currency))
+            {
+                bankAccount.Currency = model.Currency;
+            }
+            else
+            {
+                bankAccount.Currency = "PLN";
+            }
+
+
+            if (model.InterestRate.HasValue)
                 bankAccount.InteresetRate = model.InterestRate;
      
             bankAccount.ClientId = account.ClientId;
