@@ -1,11 +1,11 @@
 import { useState } from "react";
 import styles from "../../.././styles/Login.module.css";
-import { useNavigate } from "react-router";
 import AuthenticationService, {
   type LoginModel,
 } from "../AuthenticationService";
 import NavBar from "../../../NavBar";
 import Footer from "../../../Footer";
+import VerifyCodeModal from "../../../modals/VerifyCodeModal";
 
 function Login() {
   const [formData, setFormData] = useState<LoginModel>({
@@ -13,6 +13,9 @@ function Login() {
     login: "",
     password: "",
   });
+
+  const [succededLogin, setSuccededLogin] = useState<boolean>(false);
+  const [loginAttemptId, setLoginAttemptId] = useState<number>();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,8 +33,6 @@ function Login() {
     });
   };
 
-  const navigate = useNavigate();
-
   type ApiErrorResponse = {
     [key: string]: string[];
   };
@@ -44,9 +45,8 @@ function Login() {
 
     try {
       const response = await AuthenticationService.login(formData);
-      console.log(response);
-      localStorage.setItem("token", response);
-      navigate("/bankAccounts");
+      setSuccededLogin(true);
+      setLoginAttemptId(response.loginAttemptId);
     } catch (error: any) {
       if (error.response.status === 422) {
         setErrors(error.response.data);
@@ -129,6 +129,11 @@ function Login() {
           <p className={styles.errorFound}>{errors.NotFound[0]}</p>
         )}
       </div>
+      {loginAttemptId && (
+        <VerifyCodeModal isOpen={succededLogin} loginAttemptId={loginAttemptId}>
+          <p>Wprowadź kod weryfikujący:</p>
+        </VerifyCodeModal>
+      )}
 
       <Footer />
     </>

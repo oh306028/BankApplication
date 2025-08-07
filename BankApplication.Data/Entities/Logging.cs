@@ -18,6 +18,7 @@ namespace BankApplication.Data.Entities
 
         public DateTime LogInDate { get; set; }
         public bool IsSuccess { get; set; }
+        public string LoginCode { get; set; }   
 
         public Logging(int accountId)
         {

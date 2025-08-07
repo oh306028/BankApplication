@@ -2,6 +2,7 @@
 using BankApplication.App.Helpers.Extensions;
 using BankApplication.App.Modules.Account.Models.Create;
 using BankApplication.App.Modules.Client.Models.Create;
+using BankApplication.App.Modules.Client.Models.Details;
 using BankApplication.App.Services.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,12 +23,20 @@ namespace BankApplication.App.Modules.Account.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] LoginModel model)
+        [HttpPost("login")] 
+        public async Task<ActionResult<SuccededLoginModel>> Login([FromBody] LoginModel model)
         {
-            var token = await accountService.Login(model);
+            var succededModel = await accountService.Login(model);
 
-            return Ok(token);
+            return Ok(succededModel);   
+        }
+
+        [HttpPost("verify-code")]
+        public async Task<ActionResult<string>> VerifyCode([FromBody] VerifyCodeModel model)    
+        {
+            var token = await accountService.VerifyCode(model); 
+
+            return Ok(token);   
         }
 
         [HttpPost("register")]

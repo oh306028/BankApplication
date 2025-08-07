@@ -1,0 +1,88 @@
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 51, 102, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #003366;
+}
+
+.title {
+  font-size: 1.4rem;
+  color: #004d99;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.message {
+  margin-bottom: 25px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cce0ff;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: 0.5rem;
+  font-family: monospace;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #004d99;
+  box-shadow: 0 0 0 2px rgba(0, 77, 153, 0.2);
+}
+
+.submitButton {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #004d99;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #003366;
+}
+
+.submitButton:disabled {
+  background-color: #a9a9a9;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.errorMessage {
+  color: #dc3545; /* Czerwony */
+  font-weight: 500;
+  margin-bottom: 15px;
+}

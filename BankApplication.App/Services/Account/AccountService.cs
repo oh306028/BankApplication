@@ -12,12 +12,16 @@ using BankApplication.App.Modules.Client.Models.Details;
 using BankApplication.App.Modules.Client.Models.Create;
 using AutoMapper;
 using BankApplication.Data.Entities;
+using System.Security.Principal;
+using BankApplication.App.Services.Client;
 
 namespace BankApplication.App.Services.Account
 {
     public interface IAccountService
     {
-        Task<string> Login(LoginModel model);
+        Task<SuccededLoginModel> Login(LoginModel model);
+
+        Task<string> VerifyCode(VerifyCodeModel model);
         void Register(RegisterModel model);
         bool IsAdmin(int userId);
 
@@ -29,12 +33,14 @@ namespace BankApplication.App.Services.Account
         private readonly AppDbContext context;
         private readonly JwtOptions authenticationOptions;
         private readonly IMapper mapper;
+        private readonly IEmailService emails;
 
-        public AccountService(AppDbContext context, JwtOptions authenticationOptions, IMapper mapper)   
+        public AccountService(AppDbContext context, JwtOptions authenticationOptions, IMapper mapper, IEmailService emails)   
         {
             this.context = context;
             this.authenticationOptions = authenticationOptions;
             this.mapper = mapper;
+            this.emails = emails;
         }
         public void Register(RegisterModel model)
         {
@@ -67,7 +73,7 @@ namespace BankApplication.App.Services.Account
 
         }
 
-        public async Task<string> Login(LoginModel model)
+        public async Task<SuccededLoginModel> Login(LoginModel model)
         {
             var account = await context.Accounts
                 .Include(c => c.Client)
@@ -81,23 +87,77 @@ namespace BankApplication.App.Services.Account
             var passwordHasher = new PasswordHasher<BankApplication.Data.Entities.Account>();
             var result = passwordHasher.VerifyHashedPassword(account, account.PasswordHash, model.Password);
 
-            var logging = new Logging(account.Id)
-            {
-                IsSuccess = result == PasswordVerificationResult.Success
-            };
-            context.Loggings.Add(logging);
-            await context.SaveChangesAsync();
+            var logging = new Logging(account.Id);
 
 
             if (result == PasswordVerificationResult.Failed)
             {
+               logging.IsSuccess = false;
+                context.Loggings.Add(logging);
+                await context.SaveChangesAsync();
+
                 await TryApplyLoginBlockade(account.Id);
                 throw new NotFoundException("Błędny login lub hasło. Konto zostanie zablokowane po 3 nieudanych próbach.");
             }
+            else
+            {
+                if (IsAdmin(account.Id))
+                {
+                    logging.LoginCode = "1234567";           
+                }
+                else
+                {
+                    logging.LoginCode = GenerateLoginCode();
+                    await emails.SendVerificationEmailAsync(account.Client.Email, logging.LoginCode);
+                }
+                  
+                context.Loggings.Add(logging);
+                await context.SaveChangesAsync();
+            }
 
-            var token = GenerateToken(account);
+           
+
+            return new SuccededLoginModel()
+            {
+                LoginAttemptId = logging.Id
+            };
+
+        }
+
+        public async Task<string> VerifyCode(VerifyCodeModel model) 
+        {
+            var logging = await context.Loggings
+                                        .Include(l => l.Account)
+                                        .ThenInclude(p => p.Client)
+                                        .SingleOrDefaultAsync(l => l.Id == model.LoginAttemptId);
+
+            if (logging.LoginCode != model.VerificationCode)
+                throw new NotFoundException("Błędny kod weryfikacyjny");
+
+            logging.IsSuccess = true;
+            await context.SaveChangesAsync();
+
+            var token = GenerateToken(logging.Account);
             return token;
         }
+
+
+        private static string GenerateLoginCode()   
+        {
+            var availableChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()/".ToCharArray();
+
+            var builder = new StringBuilder(6);
+            var Random = new Random();
+
+            for (int i = 0; i <= 6; i++)
+            {
+                var index = Random.Next(availableChars.Length);
+                builder.Append(availableChars[index]);
+            }
+
+            return builder.ToString();
+        }
+
 
         private async Task EnsureAccountNotBlocked(int accountId)
         {

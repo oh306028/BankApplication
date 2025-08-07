@@ -23,12 +23,14 @@ namespace BankApplication.App.Services.Client
         private readonly AppDbContext context;
         private readonly JwtOptions authenticationOptions;
         private readonly IMapper mapper;
+        private readonly IEmailService emails;
 
-        public UpdateService(AppDbContext context, JwtOptions authenticationOptions, IMapper mapper)
+        public UpdateService(AppDbContext context, JwtOptions authenticationOptions, IMapper mapper, IEmailService emails)
         {
             this.context = context;
             this.authenticationOptions = authenticationOptions;
             this.mapper = mapper;
+            this.emails = emails;
         }
         public BankApplication.Data.Entities.Client Join(ClientForm model)
         {
@@ -42,6 +44,8 @@ namespace BankApplication.App.Services.Client
 
             context.Clients.Add(newClient);
             context.SaveChanges();
+
+            emails.SendClientCodeMail(newClient.Email, newClient.ClientCode);
 
             return newClient;
         }
