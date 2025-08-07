@@ -30,4 +30,14 @@ The app is module oriented project, each module has its own controllers and mode
 
 On the backend side there are:  
 1) BankApplication.Data (entities and enums connected to database models)  
-2) BankApplication.App (web api solution; contains controllers and services)  
+2) BankApplication.App (web api solution; contains controllers and services)
+
+Application uses SMTP mail server:  
+1) Sending verification codes via mails  
+2) Sending unique client codes via mials
+
+Transfers are configured with transactions.   
+
+The application is a two-sided program that allows administrators to monitor clients' real-time movements.  
+Clients can view their transfer history and send block requests.  
+
