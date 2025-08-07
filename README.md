@@ -22,6 +22,7 @@ Default login to admin account:
 **login**: adminTab  
 **password**: Admin!  
 **email**: admin@admin.pl  
+**verification code**: 1234567
 
 
 **📄 Technical Documentation**  
