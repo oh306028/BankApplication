@@ -24,7 +24,7 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ isAdmin }) => {
         <div>
           {!isAdmin && (
             <NavLink
-              to="/accounts/details"
+              to="/accounts/profile"
               className={({ isActive }) =>
                 isActive ? navStyles.navLinksActive : navStyles.navLinks
               }

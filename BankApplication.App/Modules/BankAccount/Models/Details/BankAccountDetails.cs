@@ -6,6 +6,7 @@
         public decimal Balance { get; set; }    
         public string Currency { get; set; }
         public decimal? InterestRate { get; set; }
-        public string PublicId { get; set; }    
+        public string PublicId { get; set; }
+        public bool IsBlocked { get; set; } 
     }
 }

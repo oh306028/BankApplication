@@ -6,6 +6,7 @@ import { Routes, Route, useNavigate } from "react-router";
 import axios from "axios";
 import BankAccounts from "./modules/Accounts/BankAccounts";
 import AcceptationAwait from "./modules/Authentication/views/AcceptationAwait";
+import Profile from "./modules/Accounts/ClientAccount/Profile";
 
 function App() {
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ function App() {
         <Route path="/accounts/join" element={<JoinAsClient />} />
         <Route path="/bankAccounts" element={<BankAccounts />} />
         <Route path="/accounts/acceptation" element={<AcceptationAwait />} />
+        <Route path="/accounts/profile" element={<Profile />} />
       </Routes>
     </>
   );

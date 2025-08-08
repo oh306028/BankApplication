@@ -29,6 +29,7 @@ function Details() {
   const [hasActiveBlockRequests, setHasActiveBlockRequests] =
     useState<boolean>(false);
   const [showPicker, setShowPicker] = useState<boolean>(false);
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
 
   useEffect(() => {
     const getInitialData = async () => {
@@ -48,6 +49,10 @@ function Details() {
         const result = await AccountsService.getDetailsByType(
           selectedAccountType
         );
+
+        const isBlocked = await AccountsService.isBlocked(result.publicId);
+        setIsBlocked(isBlocked);
+
         setDetails(result);
         setIsTransferActive(false);
         setShowHistory(false);
@@ -63,7 +68,7 @@ function Details() {
     const checkBlockRequests = async () => {
       if (details?.publicId) {
         const result = await AccountsService.hasBLockRequests(details.publicId);
-        setHasActiveBlockRequests(result);
+        setHasActiveBlockRequests(result || isBlocked);
       }
     };
     checkBlockRequests();
@@ -123,6 +128,13 @@ function Details() {
 
   const handleBlockRequest = async () => {
     if (hasActiveBlockRequests) {
+      if (isBlocked) {
+        showModal(
+          "Rachunek zablokowany. Skontaktuj się z administratorem w celu odblokowania."
+        );
+        return;
+      }
+
       showModal("Wysłano już wniosek. Oczekiwanie na akceptację.");
       return;
     }
@@ -195,119 +207,137 @@ function Details() {
               </button>
             </div>
 
-            <div className={styles.mainContent}>
-              {details ? (
-                <>
-                  <div className={styles.detailsBox}>
-                    <div className={styles.balanceInfo}>
-                      <p className={styles.balanceLabel}>Dostępne środki</p>
-                      <p className={styles.balanceAmount}>
-                        {details.balance.toFixed(2)}
-                        <span className={styles.currency}>
-                          {" "}
-                          {details.currency}
-                        </span>
-                      </p>
-                    </div>
-                    <div className={styles.accountNumberInfo}>
-                      <p>Numer konta</p>
-                      <p className={styles.accountNumber}>
-                        {details.accountNumber}
-                      </p>
-                    </div>
-                    <div className={styles.container}>
-                      <button
-                        onClick={toggleTransfer}
-                        className={styles.actionButton}
-                      >
-                        {isTransferActive ? "Anuluj przelew" : "Nowy przelew"}
-                      </button>
-
-                      <button
-                        onClick={handleDownloadDetails}
-                        className={styles.downloadButton}
-                      >
-                        Pobierz wyciąg
-                      </button>
-                    </div>
-                  </div>
-
-                  {isTransferActive && (
-                    <SendTransfer
-                      publicId={details.publicId}
-                      onTransferSent={handleTransferSent}
-                    />
-                  )}
-
-                  <div className={styles.historySection}>
-                    <h3
-                      onClick={() => setShowHistory(!showHistory)}
-                      className={styles.historyTitle}
-                    >
-                      Historia transakcji
-                      <span
-                        className={`${styles.arrow} ${
-                          showHistory ? styles.arrowUp : ""
-                        }`}
-                      ></span>
-                    </h3>
-                    {showHistory && (
-                      <>
-                        <div className={styles.toolbar}>
-                          <div className={styles.filterButtons}>
-                            <button
-                              onClick={() => setHistoryFilter("all")}
-                              className={
-                                historyFilter === "all"
-                                  ? styles.activeFilter
-                                  : ""
-                              }
-                            >
-                              Wszystkie
-                            </button>
-                            <button
-                              onClick={() => setHistoryFilter("received")}
-                              className={
-                                historyFilter === "received"
-                                  ? styles.activeFilter
-                                  : ""
-                              }
-                            >
-                              Przychodzące
-                            </button>
-                            <button
-                              onClick={() => setHistoryFilter("sent")}
-                              className={
-                                historyFilter === "sent"
-                                  ? styles.activeFilter
-                                  : ""
-                              }
-                            >
-                              Wychodzące
-                            </button>
-                          </div>
+            {isBlocked && (
+              <div className={styles.blockedOverlay}>
+                <div className={styles.blockedContent}>
+                  <span className={styles.blockedIcon}>🔒</span>
+                  <h2 className={styles.blockedTitle}>Rachunek zablokowany</h2>
+                  <p className={styles.blockedMessage}>
+                    Twój wniosek został zaakceptowany. Skontaktuj się z
+                    administratorem w celu odblokowania rachunku.
+                  </p>
+                </div>
+              </div>
+            )}
+            {!isBlocked && (
+              <>
+                <div className={styles.mainContent}>
+                  {details ? (
+                    <>
+                      <div className={styles.detailsBox}>
+                        <div className={styles.balanceInfo}>
+                          <p className={styles.balanceLabel}>Dostępne środki</p>
+                          <p className={styles.balanceAmount}>
+                            {details.balance.toFixed(2)}
+                            <span className={styles.currency}>
+                              {" "}
+                              {details.currency}
+                            </span>
+                          </p>
+                        </div>
+                        <div className={styles.accountNumberInfo}>
+                          <p>Numer konta</p>
+                          <p className={styles.accountNumber}>
+                            {details.accountNumber}
+                          </p>
+                        </div>
+                        <div className={styles.container}>
                           <button
-                            onClick={handleDownloadHistory}
+                            onClick={toggleTransfer}
+                            className={styles.actionButton}
+                          >
+                            {isTransferActive
+                              ? "Anuluj przelew"
+                              : "Nowy przelew"}
+                          </button>
+
+                          <button
+                            onClick={handleDownloadDetails}
                             className={styles.downloadButton}
                           >
-                            Pobierz historię
+                            Pobierz wyciąg
                           </button>
                         </div>
+                      </div>
 
-                        <TransferList
-                          key={transferListVersion}
+                      {isTransferActive && (
+                        <SendTransfer
                           publicId={details.publicId}
-                          accountNumber={details.accountNumber}
-                          filter={historyFilter}
+                          onTransferSent={handleTransferSent}
                         />
-                      </>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <p>Ładowanie danych konta...</p>
-              )}
-            </div>
+                      )}
+
+                      <div className={styles.historySection}>
+                        <h3
+                          onClick={() => setShowHistory(!showHistory)}
+                          className={styles.historyTitle}
+                        >
+                          Historia transakcji
+                          <span
+                            className={`${styles.arrow} ${
+                              showHistory ? styles.arrowUp : ""
+                            }`}
+                          ></span>
+                        </h3>
+                        {showHistory && (
+                          <>
+                            <div className={styles.toolbar}>
+                              <div className={styles.filterButtons}>
+                                <button
+                                  onClick={() => setHistoryFilter("all")}
+                                  className={
+                                    historyFilter === "all"
+                                      ? styles.activeFilter
+                                      : ""
+                                  }
+                                >
+                                  Wszystkie
+                                </button>
+                                <button
+                                  onClick={() => setHistoryFilter("received")}
+                                  className={
+                                    historyFilter === "received"
+                                      ? styles.activeFilter
+                                      : ""
+                                  }
+                                >
+                                  Przychodzące
+                                </button>
+                                <button
+                                  onClick={() => setHistoryFilter("sent")}
+                                  className={
+                                    historyFilter === "sent"
+                                      ? styles.activeFilter
+                                      : ""
+                                  }
+                                >
+                                  Wychodzące
+                                </button>
+                              </div>
+                              <button
+                                onClick={handleDownloadHistory}
+                                className={styles.downloadButton}
+                              >
+                                Pobierz historię
+                              </button>
+                            </div>
+
+                            <TransferList
+                              key={transferListVersion}
+                              publicId={details.publicId}
+                              accountNumber={details.accountNumber}
+                              filter={historyFilter}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <p>Ładowanie danych konta...</p>
+                  )}
+                </div>
+              </>
+            )}
           </div>
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             <p>{modalMessage}</p>

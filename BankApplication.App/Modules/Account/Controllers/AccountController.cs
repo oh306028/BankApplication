@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BankApplication.App.Helpers.Extensions;
 using BankApplication.App.Modules.Account.Models.Create;
+using BankApplication.App.Modules.Account.Models.Details;
 using BankApplication.App.Modules.Client.Models.Create;
 using BankApplication.App.Modules.Client.Models.Details;
 using BankApplication.App.Services.Account;
@@ -53,6 +54,15 @@ namespace BankApplication.App.Modules.Account.Controllers
         {
             var response = accountService.IsAdmin(User.Id());
             return Ok(response);
+        }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public ActionResult<ProfileDetails> GetDetails()
+        {
+            var response = accountService.GetDetails(User.Id());   
+            return Ok(response);
+
         }
 
 

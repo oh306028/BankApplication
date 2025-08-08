@@ -14,6 +14,7 @@ using AutoMapper;
 using BankApplication.Data.Entities;
 using System.Security.Principal;
 using BankApplication.App.Services.Client;
+using BankApplication.App.Modules.Account.Models.Details;
 
 namespace BankApplication.App.Services.Account
 {
@@ -24,6 +25,7 @@ namespace BankApplication.App.Services.Account
         Task<string> VerifyCode(VerifyCodeModel model);
         void Register(RegisterModel model);
         bool IsAdmin(int userId);
+        ProfileDetails GetDetails(int accountId);
 
         List<ClientDetails> GetAdmins();
     }
@@ -64,7 +66,7 @@ namespace BankApplication.App.Services.Account
                 IsBlocked = false,
                 Login = model.Login,
                 PasswordHash = passwordHash,
-                IsDoubleAuthenticated = false,
+                IsDoubleAuthenticated = true,
                 IsEmployee = false
             };
 
@@ -141,6 +143,10 @@ namespace BankApplication.App.Services.Account
             return token;
         }
 
+        public ProfileDetails GetDetails(int accountId){
+            var response = context.Accounts.Include(p => p.Client).AsNoTracking().Single(p => p.Id == accountId);
+            return mapper.Map<ProfileDetails>(response);
+        } 
 
         private static string GenerateLoginCode()   
         {

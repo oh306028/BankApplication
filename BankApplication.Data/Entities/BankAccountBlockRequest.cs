@@ -42,7 +42,7 @@ namespace BankApplication.Data.Entities
             builder.HasOne(p => p.BankAccount).WithMany(p => p.BlockadeRequests)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(p => p.Admin).WithOne(p => p.BlockRequest)
+            builder.HasOne(p => p.Admin).WithMany(p => p.BlockRequests)
                 .OnDelete(DeleteBehavior.SetNull);
 
         }   

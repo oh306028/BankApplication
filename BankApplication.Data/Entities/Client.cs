@@ -24,7 +24,7 @@ namespace BankApplication.Data.Entities
         public DateTime CreatedDate { get; set; }
         public DateTime BirthDate { get; set; }
         public string Nationality { get; set; }
-        public BankAccountBlockRequest BlockRequest { get; set; }   
+        public List<BankAccountBlockRequest> BlockRequests { get; set; }        
 
         public string Country { get; set; }
         public string City { get; set; }

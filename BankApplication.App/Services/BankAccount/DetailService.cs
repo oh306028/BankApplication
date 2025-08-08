@@ -21,6 +21,8 @@ namespace BankApplication.App.Services.BankAccount
         List<Data.Entities.BankAccount> GetAllAccounts();
         bool HasActiveBlockRequests(Guid accountId);
 
+        bool IsBlocked(Guid accountId);
+
 
     }
 
@@ -135,6 +137,15 @@ namespace BankApplication.App.Services.BankAccount
                 .FirstOrDefault(i => i.PublicId == accountId);  
 
             return account.BlockadeRequests.Any(p => p.IsActive);
+        }
+
+        public bool IsBlocked(Guid accountId)
+        {
+            var account = context.BankAccounts
+               .Include(p => p.BlockadeRequests)
+               .FirstOrDefault(i => i.PublicId == accountId);
+
+            return account.BlockadeRequests.Any(p => p.IsAccepted.HasValue && p.IsAccepted.Value);
         }
     }
 }

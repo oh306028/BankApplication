@@ -115,6 +115,10 @@ function BlockadeRequests() {
                 <div className={styles.requestInfo}>
                   <p className={styles.clientName}>{req.clientName}</p>
                   <span className={styles.requestDate}>
+                    {req.bankAccountNumber}
+                  </span>
+                  <br></br>
+                  <span className={styles.requestDate}>
                     Złożono: {dayjs(req.requestDate).format("DD.MM.YYYY")}
                   </span>
                 </div>

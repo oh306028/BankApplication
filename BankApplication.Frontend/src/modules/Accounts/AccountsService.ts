@@ -45,6 +45,12 @@ export default class AccountsService {
       )
     ).data;
   }
+
+  public static async isBlocked(accountId: string): Promise<boolean> {
+    return (await axios.get<boolean>(`bank-accounts/${accountId}/isBlocked`))
+      .data;
+  }
+
   public static async createBankAccount(model: Form): Promise<void> {
     await axios.post<KeyValuePair[]>(`bank-accounts`, model);
   }
@@ -55,6 +61,10 @@ export default class AccountsService {
 
   public static async getClientList(): Promise<ClientDetails[]> {
     return (await axios.get<ClientDetails[]>(`clients/dictionary/list`)).data;
+  }
+
+  public static async getDetails(): Promise<ProfileDetails> {
+    return (await axios.get<ProfileDetails>(`accounts/profile`)).data;
   }
 
   public static async getAdminList(): Promise<ClientDetails[]> {
@@ -80,6 +90,22 @@ export default class AccountsService {
       )
     ).data;
   }
+}
+
+export interface ProfileDetails {
+  login: string;
+  isDoubleAuthenticated: boolean;
+  createdDate: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  pesel: string;
+  birthDate: string;
+  country: string;
+  city: string;
+  postalCode: string;
+  number: string;
 }
 
 export interface BlockRequestDetails {

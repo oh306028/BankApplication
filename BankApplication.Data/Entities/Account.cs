@@ -24,7 +24,7 @@ namespace BankApplication.Data.Entities
         public string Login { get; set; }
         public string PasswordHash { get; set; }
 
-        public bool IsDoubleAuthenticated { get; set; } = false;            
+        public bool IsDoubleAuthenticated { get; set; } = true;            
 
         public virtual Blockade Blockade { get; set; }
         public virtual Authentication Authentication { get; set; }

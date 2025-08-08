@@ -113,5 +113,12 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
 
         }
 
+        [HttpGet("{accountId}/isBlocked")]
+        public ActionResult<bool> IsBlocked(Guid accountId)
+        {
+            var result = service.IsBlocked(accountId);
+            return Ok(result);
+        }
+
     }
 }
