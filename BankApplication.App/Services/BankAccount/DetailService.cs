@@ -23,6 +23,8 @@ namespace BankApplication.App.Services.BankAccount
 
         bool IsBlocked(Guid accountId);
 
+        BankApplication.Data.Entities.BankAccount FetchDetail(Guid id);
+
 
     }
 
@@ -43,6 +45,10 @@ namespace BankApplication.App.Services.BankAccount
 
             return account.Client.BankAccounts;
         }
+
+        public BankApplication.Data.Entities.BankAccount FetchDetail(Guid id) => context.BankAccounts.Include(p => p.Client).Single(p => p.PublicId == id);    
+
+        
 
         public BankApplication.Data.Entities.BankAccount GetDetailsByType(int userId, BankAccountType type)
         {

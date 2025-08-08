@@ -117,7 +117,17 @@ function Details() {
     }
   };
 
-  const handleDownloadDetails = async () => {};
+  const handleDownloadDetails = async () => {
+    if (!details) {
+      showModal("Nie można pobrać wyciągu, brak danych konta.");
+      return;
+    }
+    try {
+      await AccountsService.downloadDetails(details.publicId);
+    } catch (error) {
+      showModal("Błąd podczas pobierania wyciągu.");
+    }
+  };
   const handleAccountPicker = async () => {
     if (ownTypes.length === 3) {
       showModal("Utworzono już wszystkie typy rachunków.");
@@ -262,6 +272,7 @@ function Details() {
 
                       {isTransferActive && (
                         <SendTransfer
+                          balance={details.balance}
                           publicId={details.publicId}
                           onTransferSent={handleTransferSent}
                         />

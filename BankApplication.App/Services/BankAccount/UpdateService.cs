@@ -82,6 +82,9 @@ namespace BankApplication.App.Services.BankAccount
                 .Include(p => p.TransfersReceived)
                 .Single(p => p.PublicId == accountId);
 
+            if (bankAccountFrom.Currency != bankAccountTo.Currency)
+                throw new NotFoundException("Konto docelowe posiada inną walutę niż Twoje.");
+
             var transfer = new Transfer();
             transfer = mapper.Map<Transfer>(model);
 

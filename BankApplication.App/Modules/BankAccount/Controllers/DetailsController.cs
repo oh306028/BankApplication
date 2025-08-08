@@ -2,11 +2,14 @@
 using BankApplication.App.Helpers.Extensions;
 using BankApplication.App.Helpers.Models;
 using BankApplication.App.Modules.BankAccount.Models.Details;
+using BankApplication.App.Modules.BankAccount.Transfers.Models;
 using BankApplication.App.Modules.Client.Models.Details;
+using BankApplication.App.Printers;
 using BankApplication.App.Services.BankAccount;
 using BankApplication.Data.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QuestPDF.Fluent;
 
 namespace BankApplication.App.Modules.BankAccount.Controllers
 {
@@ -118,6 +121,16 @@ namespace BankApplication.App.Modules.BankAccount.Controllers
         {
             var result = service.IsBlocked(accountId);
             return Ok(result);
+        }
+
+        [HttpGet("{accountId}/download")]
+        public ActionResult GetPdf([FromRoute] Guid accountId)
+        {
+            var account = service.FetchDetail(accountId);
+            var printer = new BankAccountDetailsPrinter(account);   
+            var pdfBytes = printer.GeneratePdf();
+
+            return File(pdfBytes, "application/pdf", $"Wyciąg-{DateTime.Now.Date}.pdf");
         }
 
     }

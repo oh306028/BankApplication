@@ -108,6 +108,33 @@ export default class AccountsService {
       )
     ).data;
   }
+
+  public static async downloadDetails(accountId: string): Promise<void> {
+    try {
+      const response = await axios.get(`bank-accounts/${accountId}/download`, {
+        responseType: "blob",
+        headers: {
+          Accept: "application/pdf",
+        },
+      });
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Wyciąg-${new Date().toISOString().split("T")[0]}.pdf`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Błąd podczas pobierania PDF:", error);
+      throw error;
+    }
+  }
 }
 
 export interface ProfileDetails {

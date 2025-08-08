@@ -7,11 +7,13 @@ import styles from "../../../styles/SendTransfer.module.css";
 interface SendTransferProps {
   publicId: string;
   onTransferSent?: () => void;
+  balance: number;
 }
 
 const SendTransfer: React.FC<SendTransferProps> = ({
   publicId,
   onTransferSent,
+  balance,
 }) => {
   const [formData, setFormData] = useState<Form>({
     accountToNumber: "",
@@ -51,6 +53,11 @@ const SendTransfer: React.FC<SendTransferProps> = ({
     }
     if (!formData.title.trim()) {
       showModal("Tytuł przelewu jest wymagany.");
+      return;
+    }
+
+    if (formData.amount > balance) {
+      showModal("Niewystarczające środki");
       return;
     }
 
