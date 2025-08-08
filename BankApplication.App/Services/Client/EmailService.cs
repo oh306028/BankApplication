@@ -58,7 +58,7 @@ namespace BankApplication.App.Services.Client
             {
                 From = new MailAddress(_config["EmailSettings:FromEmail"], _config["EmailSettings:FromName"]),
                 Subject = "Kod klienta PocketBank",
-                Body = $"Twój unikalny kod Klienta: {clientCode}",  
+                Body = $"Dziękujemy za dołączenie do PocketBank! Zaakceptowaliśmy Twój wniosek. Utwórz teraz konto bankowe! Twój unikalny kod Klienta: {clientCode}",  
                 IsBodyHtml = false
             };
 

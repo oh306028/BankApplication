@@ -7,7 +7,8 @@ using BankApplication.App.Modules.Client.Models.Details;
 namespace BankApplication.App.Resolvers
 {
     public class ClientNameResolver : IValueResolver<Logging, LogginDetails, string>,
-                                      IValueResolver<BankAccountBlockRequest, BlockRequestDetails, string>
+                                      IValueResolver<BankAccountBlockRequest, BlockRequestDetails, string>,
+                                      IValueResolver<BecomeClientRequest, ClientRequestDetails, string>
     {
         public ClientNameResolver(AppDbContext context) 
         {   
@@ -31,6 +32,12 @@ namespace BankApplication.App.Resolvers
                  .Single(p => p.Id == source.BankAccountId);
 
             return account.Client.FullName;
+        }
+
+        public string Resolve(BecomeClientRequest source, ClientRequestDetails destination, string destMember, ResolutionContext context)
+        {
+            var client = Context.Clients.Single(p => p.Id == source.ClientId);
+            return client.FullName;
         }
     }
 }

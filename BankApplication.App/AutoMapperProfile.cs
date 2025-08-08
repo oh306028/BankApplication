@@ -34,6 +34,10 @@ namespace BankApplication.App
                 .ForMember(p => p.BankAccountNumber, o => o.MapFrom<AccountNumberResolver>())
                 .ForMember(p => p.AccountId, o => o.MapFrom<AccountIdResolver>());
 
+            CreateMap<BecomeClientRequest, ClientRequestDetails>()
+                  .ForMember(p => p.ClientName, o => o.MapFrom<ClientNameResolver>())
+                  .ForMember(p => p.ClientId, o => o.MapFrom<ClientIdResolver>());  
+
             CreateMap<Account, ProfileDetails>()
                 .ForMember(p => p.FirstName, o => o.MapFrom(s => s.Client.FirstName))
                 .ForMember(p => p.LastName, o => o.MapFrom(s => s.Client.LastName))

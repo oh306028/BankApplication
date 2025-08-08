@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using BankApplication.App.Helpers.Extensions;
 using BankApplication.App.Modules.Account.Controllers;
+using BankApplication.App.Modules.BankAccount.Models.Update;
 using BankApplication.App.Modules.Client.Models.Create;
 using BankApplication.App.Modules.Client.Models.Details;
 using BankApplication.App.Services.Account;
@@ -39,6 +41,13 @@ namespace BankApplication.App.Modules.Client.Controllers
         {
             service.Update(model);
             return Accepted();
+        }
+
+        [HttpPost("{clientId}/manage-client-request")]
+        public ActionResult ManageClientRequest(Guid clientId, BlockRequestModel model)
+        {
+            service.ManageClientRequest(clientId, model, User.Id());  
+            return Ok();
         }
     }
 }

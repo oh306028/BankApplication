@@ -15,7 +15,8 @@ namespace BankApplication.App.Services.Client
         List<ClientDetails> List();
         List<LogginDetails> LoginAttempts();
 
-        List<BlockRequestDetails> BlockRequests();  
+        List<BlockRequestDetails> BlockRequests();
+        List<ClientRequestDetails> ClientRequests();    
     }
 
     public class DetailService : IDetailService
@@ -38,6 +39,16 @@ namespace BankApplication.App.Services.Client
                 .ToList();
 
             return mapper.Map<List<BlockRequestDetails>>(blockades);
+
+        }
+
+        public List<ClientRequestDetails> ClientRequests()    
+        {
+            var blockades = context.BecomeClientRequests
+                .Include(p => p.Client)
+                .ToList();
+
+            return mapper.Map<List<ClientRequestDetails>>(blockades);
 
         }
 

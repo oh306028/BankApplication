@@ -18,6 +18,16 @@ export default class AccountsService {
     );
   }
 
+  public static async manageClientRequest(
+    model: BlockRequestModel,
+    clientId: string
+  ): Promise<void> {
+    await axios.post<BlockRequestModel>(
+      `clients/${clientId}/manage-client-request`,
+      model
+    );
+  }
+
   public static async getOwnTypes(): Promise<KeyValuePair[]> {
     return (await axios.get<KeyValuePair[]>(`bank-accounts/own-types`)).data;
   }
@@ -83,6 +93,14 @@ export default class AccountsService {
     ).data;
   }
 
+  public static async getClientRequests(): Promise<ClientRequestDetails[]> {
+    return (
+      await axios.get<ClientRequestDetails[]>(
+        `clients/dictionary/client-requests`
+      )
+    ).data;
+  }
+
   public static async getLoginAttempts(): Promise<LoginAttemptDetails[]> {
     return (
       await axios.get<LoginAttemptDetails[]>(
@@ -117,6 +135,16 @@ export interface BlockRequestDetails {
   bankAccountNumber: string;
   publicId: string;
   accountId: string;
+}
+
+export interface ClientRequestDetails {
+  requestDate: string;
+  managedDate: string;
+  isAccepted?: boolean;
+  isActive?: boolean;
+  clientName: string;
+  publicId: string;
+  clientId: string;
 }
 
 export interface BlockRequestModel {

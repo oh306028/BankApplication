@@ -24,6 +24,7 @@ namespace BankApplication.Data
         public DbSet<Logging> Loggings { get; set; }
         public DbSet<Transfer> Transfers { get; set; }
         public DbSet<BankAccountBlockRequest> BankAccountBlockRequests { get; set; }
+        public DbSet<BecomeClientRequest> BecomeClientRequests { get; set; }    
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

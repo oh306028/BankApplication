@@ -8,6 +8,7 @@ import ClientsList from "./ClientsList";
 import styles from "../../../styles/AdminAccounts.module.css";
 import LoginAttempts from "./LoginAttempts";
 import BlockadeRequests from "./BlockadeRequests";
+import ClientRequests from "./ClientRequests";
 
 type AdminView =
   | "admins"
@@ -46,7 +47,7 @@ function AdminAccounts() {
       case "blockRequests":
         return <BlockadeRequests />;
       case "applications":
-        return <p className={styles.placeholder}>Ta sekcja jest w budowie.</p>;
+        return <ClientRequests />;
       default:
         return (
           <p className={styles.placeholder}>
